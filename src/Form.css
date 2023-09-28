@@ -1,0 +1,35 @@
+.form {
+  /* background-color: lightgreen; */
+  margin-bottom: 10px;
+  position: relative;
+  margin: 15px calc(50vw - 200px);
+}
+
+.property_name {
+  font-weight: bold;
+  float: left;
+}
+
+.input_field {
+  /* background-color: red; */
+  margin-right: 10px;
+  text-align: right;
+}
+
+input {
+  /* background-color: green; */
+  width: 270px;
+  height: 20px;
+}
+
+.button {
+  width: 180px;
+  height: 35px;
+}
+
+.data {
+  background-color: lightcyan;
+  margin: 20px calc(50vw - 200px);
+  padding: 50px;
+}
+
