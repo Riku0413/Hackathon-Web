@@ -21,7 +21,7 @@ const Form: FC = () => {
   // データをとってきて表示するコンポーネント
   const fetchUsers = async (): Promise<void> => {
     try {
-      const res = await fetch("http://localhost:8080/users", {
+      const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/users", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const Form: FC = () => {
 
     try {
       // ボタンをクリックした際にデータを送信
-      const res = await fetch("http://localhost:8080/users", {
+      const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
