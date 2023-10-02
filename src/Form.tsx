@@ -119,10 +119,11 @@ const Form: FC = () => {
             />
           </div>
         </div>
-
-        <button type={"submit"} className="button">
-          POST
-        </button>
+        <div className="post-button-area">
+          <button type={"submit"} className="post-button">
+            POST
+          </button>
+        </div>
 
       </form>
 

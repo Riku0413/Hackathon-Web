@@ -1,20 +1,80 @@
-.App {
-  text-align: center;
-}
 
-.App-header {
-  background-color: #282c34;
+.header-1-contents {
   height: 110px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 40px;
+  padding-right: 40px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  background-color: #282c34;
 }
 
 .title {
-  /* background-color: aqua; */
-  position: absolute;
-  top: 15px;
+  /* background-color: grey; */
   color: white;
   font-weight: bold;
-  font-size: calc(18px + 2vmin);
+  /* font-size: calc(18px + 2vmin); */
+  font-size: 30px;
+  display: block;
 }
+
+.side-menu-list {
+  /* background-color: red; */
+  display: flex;
+}
+
+/* ✅ */
+button {
+  padding: 0;
+  border: none;
+  outline: none;
+  font: inherit;
+  color: inherit;
+  background: none
+}
+
+.side-menu {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+  height: 40px;
+  width: 110px;
+  background-color: grey;
+  border-radius: 10px;
+  font-weight: bold;
+  text-align: center;
+  /* line-height: 10px; */
+  text-decoration: none;
+  color: white;
+}
+
+.header-2-categories {
+  background-color: lightgrey;
+}
+
+.item-category {
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-right: 10px;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+}
+
+.footer-area {
+  background-color: #282c34;
+  height: 400px;
+  margin-top: 100px;
+}
+
+.footer-title {
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  padding-left: 40px;
+  padding-top: 20px;
+}
+
