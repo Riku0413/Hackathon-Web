@@ -76,6 +76,7 @@ export default function BasicTabs() {
           break;
       }  
     }
+    // setLoading(false);
   }, [location]);
   
   return (
@@ -92,8 +93,12 @@ export default function BasicTabs() {
             sx={{
               '& .MuiTabs-indicator': {
                 backgroundColor: 'orange', // アンダーバーの色をオレンジに変更
+                '& .Mui-selected': {
+                  color: 'orange', // 選択中のタブをオレンジ色に変更
+                },
               },
-          }}>
+            }}
+          >
 
             <Tab
               label="trend"

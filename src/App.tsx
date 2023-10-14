@@ -1,5 +1,5 @@
 import "./App.css";
-import Header from "./Header-components/Header";
+// import Header from "./Header-components/Header";
 import Form from "./Form";
 import SignIn from "./auth-components/SignIn";
 import SignUp from "./auth-components/SignUp";
@@ -12,6 +12,10 @@ import Favorite from "./Item-components/favorite";
 import MakeBook from "./Post-components/MakeBook";
 import MakeMovie from "./Post-components/MakeMovie";
 import MakeChapter from "./Post-components/MakeChapter";
+import Result from "./Item-components/result";
+import HomeAppBar from "./Header-components/HomeAppBar";
+
+import SearchKeywords from "./Header-components/SearchKeywords";
 
 function App() {
 
@@ -22,13 +26,25 @@ function App() {
         <BrowserRouter>
           <Routes>
             {/* <Route path="/" element={<Header />} /> */}
-            <Route path="/" element={<div><Header /><Trend /></div>} />
+            {/* <Route path="/" element={<div><Header /><Trend /></div>} />
             <Route path="/blog/" element={<div><Header /><Form /></div>} />
             <Route path="/books/" element={<div><Header /><Books /></div>} />
             <Route path="/movie/" element={<div><Header /><Movie /></div>} />
+            <Route path="/favorite/" element={<div><Header /><Favorite /></div>} />
+            <Route path="/result/" element={<div><Header /><Result /></div>} /> */}
+
+            <Route path="/" element={<div><HomeAppBar /><Trend /></div>} />
+            <Route path="/blog/" element={<div><HomeAppBar /><Form /></div>} />
+            <Route path="/books/" element={<div><HomeAppBar /><Books /></div>} />
+            <Route path="/movie/" element={<div><HomeAppBar /><Movie /></div>} />
+            <Route path="/favorite/" element={<div><HomeAppBar /><Favorite /></div>} />
+            <Route path="/result/" element={<div><HomeAppBar /><Result /></div>} />
+
+            <Route path="/search/" element={<div><HomeAppBar /><SearchKeywords /></div>} />
+
             <Route path="/signUp/" element={<div><SignUp /></div>} />
             <Route path="/signIn/" element={<div><SignIn /></div>} />
-            <Route path="/favorite/" element={<div><Header /><Favorite /></div>} />
+
             <Route path="/post/" element={<div><MakeArticle /></div>} />
             <Route path="/makeBook/" element={<div><MakeBook /></div>} />
             <Route path="/makeMovie/" element={<div><MakeMovie /></div>} />

@@ -1,3 +1,8 @@
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -12,12 +17,14 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import Button from '@mui/material/Button';
 import { auth } from '../FirebaseConfig';
-import LogOut from '../auth-components/LogOut';
+// import LogOut from '../auth-components/LogOut';
 import { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import BasicTabs from './BasicTabs';
 
-import { Link } from 'react-router-dom';
+import SearchBar from './SearchBar';
+
+import { Route, Routes, Link, useLocation } from 'react-router-dom';
 
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
@@ -153,8 +160,6 @@ export default function HomeAppBar() {
   }
   //
 
-
-
   const handleMenuItemClick = (menuItemText: string) => {
     switch (menuItemText) {
       case 'マイページ':
@@ -188,7 +193,35 @@ export default function HomeAppBar() {
         break;
     }
   };
-  
+
+  const location = useLocation();
+  let content = null;
+
+  if (location.pathname === '/') {
+    content = <BasicTabs />;
+  } else if (location.pathname === '/blog') {
+    content = <BasicTabs />;
+  } else if (location.pathname === '/books') {
+    content = <BasicTabs />;
+  } else if (location.pathname === '/movie') {
+    content = <BasicTabs />;
+  } else if (location.pathname === '/favorite') {
+    content = <BasicTabs />;
+  } else if (location.pathname === '/result') {
+    content = <BasicTabs />;
+  } else {
+    content = <SearchBar />;
+  }
+  // BasicTabs を二重でレンダリングするとバグるから注意！！！
+  // あと上述のレンダリング構文はパスの語尾が完全一致する場合と思われる
+
+
+  let marginTopValue = '150px'; // デフォルトの marginTop 値
+
+  // パスによって marginTop 値を設定
+  if (location.pathname === '/search') {
+    marginTopValue = '200px'; // 例: 特定のパスに対する marginTop 値
+  }
 
   return (
     <>
@@ -214,7 +247,7 @@ export default function HomeAppBar() {
                 </Box>
               </Link>
               
-              <Search>
+              {/* <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
@@ -222,15 +255,44 @@ export default function HomeAppBar() {
                   placeholder="Search…"
                   inputProps={{ 'aria-label': 'search' }}
                 />
-              </Search>
+              </Search> */}
 
               <Box sx={{ flexGrow: 1 }} />
 
+              <IconButton
+                color="default" // ボタンの色を指定（primaryは例です）
+                component={Link}
+                to="/search"
+              >
+                <SearchIcon />
+              </IconButton>
+
+              {/* <IconButton
+                color="default" // ボタンの色を指定（primaryは例です）
+                component={Link}
+                to="/notification"
+              >
+                <NotificationsIcon />
+              </IconButton> */}
+
+              {/* 無理やり余白を作る
+              <Box sx={{ marginRight: '8px' }} />  */}
+
               {user? (
                 <>
-                  <Button onClick={() => handleClick("/post")} variant="outlined" sx={{ mr: 1, color: '#555555' }} color='inherit'>post</Button>
-                  <LogOut/>
+                  {/* <Button onClick={() => handleClick("/post")} variant="outlined" sx={{ mr: 1, color: '#555555' }} color='inherit'>post</Button>
+                  <LogOut/> */}
 
+                  <IconButton
+                    color="default" // ボタンの色を指定（primaryは例です）
+                    component={Link}
+                    to="/notification"
+                  >
+                    <NotificationsIcon />
+                  </IconButton>
+
+                  {/* 無理やり余白を作る */}
+                  <Box sx={{ marginRight: '8px' }} /> 
                   <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -298,11 +360,60 @@ export default function HomeAppBar() {
               )}
               
             </Toolbar>
-            <BasicTabs/>
+            
+
+            {/* <Routes>
+              <Route path="/search" element={<SearchBar />} />
+              <Route path="/" element={<BasicTabs />} />
+
+              <Route path="/blog" element={<BasicTabs />} />
+              <Route path="/books" element={<BasicTabs />} />
+              <Route path="/movie" element={<BasicTabs />} />
+              <Route path="/favorite" element={<BasicTabs />} />
+              <Route path="/result" element={<BasicTabs />} />
+            </Routes> */}
+
+            {/* ↓ この記述だと二重レンダリングされたバグる！！ */}
+
+            {/* {location.pathname === '/' && <BasicTabs />}
+            {location.pathname === '/blog' && <BasicTabs />}
+            {location.pathname === '/books' && <BasicTabs />}
+            {location.pathname === '/movie' && <BasicTabs />}
+            {location.pathname === '/favorite' && <BasicTabs />}
+            {location.pathname === '/result' && <BasicTabs />} */}
+
+
+
+            {/* BasicTabs or SearchBar */}
+            {content}
+
+
+
           </AppBar>
+
+          {/* <div style={{ marginTop: '64px' }}></div> */}
+
+          {/* <Routes>
+            <Route path="/search" element={<SearchBar />} />
+            <Route path="/" element={<SearchBar />} />
+            <Route path="/blog/" element={<BasicTabs />} />
+            <Route path="/books/" element={<BasicTabs />} />
+            <Route path="/movie/" element={<BasicTabs />} />
+            <Route path="/favorite/" element={<BasicTabs />} />
+            <Route path="/result/" element={<BasicTabs />} />
+          </Routes> */}
 
         </Box>
       )}
+
+      {/* Appbarの縦幅分下げる！！ */}
+      <div style={{ marginTop: marginTopValue }}></div>
+
+      
+      
     </>
+    
+
+    
   );
 }
