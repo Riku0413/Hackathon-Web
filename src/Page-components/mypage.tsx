@@ -1,16 +1,8 @@
 import { useState, ChangeEvent } from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import * as marked from 'marked';
 
 import { styled } from '@mui/material/styles';
@@ -22,13 +14,7 @@ import CodeIcon from '@mui/icons-material/Code';
 import ImageIcon from '@mui/icons-material/Image';
 import TableChartIcon from '@mui/icons-material/TableChart';
 
-import { Link } from 'react-router-dom';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-export default function MakeChapter() {
+export default function MyPage() {
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
 
@@ -65,61 +51,12 @@ export default function MakeChapter() {
     console.log('Table button clicked');
   };
 
-  const ArrowBackButtonClick = () => {
-    // ここにテーブルボタンがクリックされたときの処理を追加
-    console.log('ArrowBack button clicked');
-  };
-
-
-
-
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
 
 
 
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed"  sx={{backgroundColor: "white"}}>
-        <Toolbar>
-
-          {/* <Link to="/" style={{ textDecoration: 'none' }}>
-            <Box
-              sx={{
-                // display: { xs: 'none', sm: 'block' },
-                backgroundColor: 'orange',
-                color: 'white',
-                px: 2, // 左右のパディングを追加
-                borderRadius: 1
-              }}
-            >
-                <Typography variant="h6" noWrap component="div">
-                  Forest
-                </Typography>
-            </Box>
-          </Link> */}
-
-
-          <IconButton color='primary' onClick={ArrowBackButtonClick}>
-            <ArrowBackIcon />
-          </IconButton>
-
-          <Box sx={{ flexGrow: 1 }} />
-
-          <Button color="primary">下書き保存</Button>
-          <Button color="primary">公開設定</Button>
-
-        </Toolbar>
-      </AppBar>
 
       <Container
         // sx={{backgroundColor: 'green'}}
@@ -152,28 +89,77 @@ export default function MakeChapter() {
               <div
                 style={{
                   margin: '20px',
-                  marginBottom: 0, // だいたい
-                  padding: '5px',
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  minHeight: '40px',
+                  minHeight: '300px',
                   display: 'flex',
                   flexDirection: 'column',
                   // backgroundColor: 'purple',
                 }}
               >
-                <TextareaAutosize
-                  placeholder="ページタイトル"
-                  style={{
-                    border: 'none',
-                    width: '100%',
-                    resize: 'none',
-                    outline: 'none',
-                    flex: 1,
-                    fontSize: '24px',
-                    // backgroundColor: 'purple'
-                  }}
-                />
+                <div
+                style={{
+                  margin: '10px',
+                  padding: '5px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  minHeight: '50px',
+                  minWidth: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  // backgroundColor: 'purple',
+
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                >
+                  <Avatar
+                    alt="Remy Sharp" 
+                    src="/static/images/avatar/2.jpg" 
+                    sx={{backgroundColor: 'orangered', width: '80px', height: '80px', fontSize: '40px'}}
+                  />
+                  ここにユーザー名
+                </div>
+                <Grid container spacing={0}
+                  // sx={{backgroundColor: 'lightgreen'}}
+                >
+                <Grid item xs={6} md={6}
+                    // sx={{backgroundColor: 'blue'}}
+                  >
+                    <div
+                      style={{
+                        margin: '20px',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                        minHeight: '50px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        // backgroundColor: 'pink'
+                      }}
+                    >
+                      <Button>プロフィール編集</Button>
+                    </div>
+                  </Grid>
+                  <Grid item xs={6} md={6}
+                    // sx={{backgroundColor: 'blue'}}
+                  >
+                    <div
+                      style={{
+                        margin: '20px',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                        minHeight: '50px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        // backgroundColor: 'pink'
+                      }}
+                    >
+                      <Button>パスワード変更</Button>
+                    </div>
+                  </Grid>
+                </Grid>
+               
+                
               </div>
             </Grid>
           </Grid>
@@ -223,68 +209,43 @@ export default function MakeChapter() {
           <Grid
             container
             spacing={0}
-            // sx={{backgroundColor: 'lightgreen'}}
+            sx={{
+              // backgroundColor: 'yellow',
+              flex: 1
+            }}
           >
-
-            <Grid
-              item
-              xs={6}
-              md={6}
-              // sx={{backgroundColor: 'blue'}}
+            <Grid 
+              item 
+              xs={12} 
+              md={12} 
+              // sx={{ backgroundColor: 'orange' }}
             >
               <div
                 style={{
                   margin: '20px',
-                  padding: '20px',
+                  marginBottom: 0, // むりやり
+                  padding: '5px',
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  minHeight: '200px',
+                  minHeight: '20px',
                   display: 'flex',
-                  flexDirection: 'column',
-                  // backgroundColor: 'pink'
+                  // flexDirection: 'column',
+                  // backgroundColor: 'purple',
                 }}
               >
-                <TextareaAutosize
-                  placeholder="ここにMarkdown記法で書いてみよう"
-                  style={{
-                    border: 'none',
-                    width: '100%',
-                    resize: 'none',
-                    outline: 'none',
-                    flex: 1,
-                    // backgroundColor: 'purple'
-                  }}
-                  value={markdownInput}
-                  onChange={handleInputChange}
-                />
+
+                <IconButton color='primary' onClick={handleCodeButtonClick}>
+                  <CodeIcon />
+                </IconButton>
+                <IconButton color='primary' onClick={handleImageButtonClick}>
+                  <ImageIcon />
+                </IconButton>
+                <IconButton color='primary' onClick={handleTableButtonClick}>
+                  <TableChartIcon />
+                </IconButton>
+
               </div>
             </Grid>
-
-            <Grid
-              item
-              xs={6}
-              md={6}
-              // sx={{backgroundColor: 'brown'}}
-            >
-              <div
-                style={{
-                  margin: '20px',
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  paddingTop: '3px',
-                  paddingBottom: '0',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  minHeight: '237px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  // backgroundColor: 'purple'
-                }}
-              >
-                <div dangerouslySetInnerHTML={{ __html: htmlOutput }} style={{ flex: 1 }} />
-              </div>
-            </Grid>
-
           </Grid>
 
         </Box>

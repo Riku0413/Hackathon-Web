@@ -209,9 +209,12 @@ export default function HomeAppBar() {
     content = <BasicTabs />;
   } else if (location.pathname === '/result') {
     content = <BasicTabs />;
-  } else {
+  } else if (location.pathname === '/search') {
     content = <SearchBar />;
+  } else {
+    content = <Box sx={{ borderBottom: 1, borderColor: 'divider' }}></Box>;
   }
+  
   // BasicTabs を二重でレンダリングするとバグるから注意！！！
   // あと上述のレンダリング構文はパスの語尾が完全一致する場合と思われる
 
@@ -234,7 +237,7 @@ export default function HomeAppBar() {
               <Link to="/" style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{
-                    display: { xs: 'none', sm: 'block' },
+                    // display: { xs: 'none', sm: 'block' },
                     backgroundColor: 'orange',
                     color: 'white',
                     px: 2, // 左右のパディングを追加
@@ -246,16 +249,6 @@ export default function HomeAppBar() {
                     </Typography>
                 </Box>
               </Link>
-              
-              {/* <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search> */}
 
               <Box sx={{ flexGrow: 1 }} />
 
@@ -266,17 +259,6 @@ export default function HomeAppBar() {
               >
                 <SearchIcon />
               </IconButton>
-
-              {/* <IconButton
-                color="default" // ボタンの色を指定（primaryは例です）
-                component={Link}
-                to="/notification"
-              >
-                <NotificationsIcon />
-              </IconButton> */}
-
-              {/* 無理やり余白を作る
-              <Box sx={{ marginRight: '8px' }} />  */}
 
               {user? (
                 <>
@@ -296,7 +278,7 @@ export default function HomeAppBar() {
                   <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" sx={{backgroundColor: 'orangered'}} />
                       </IconButton>
                     </Tooltip>
                     <Menu

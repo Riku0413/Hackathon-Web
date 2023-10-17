@@ -18,10 +18,6 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 
-import CodeIcon from '@mui/icons-material/Code';
-import ImageIcon from '@mui/icons-material/Image';
-import TableChartIcon from '@mui/icons-material/TableChart';
-
 import { Link } from 'react-router-dom';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -66,20 +62,11 @@ export default function MakeBook() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed"  sx={{backgroundColor: "white"}}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2, color: 'gray' }}
-          >
-            <MenuIcon />
-          </IconButton>
-
+          
           <Link to="/" style={{ textDecoration: 'none' }}>
             <Box
               sx={{
-                display: { xs: 'none', sm: 'block' },
+                // display: { xs: 'none', sm: 'block' },
                 backgroundColor: 'orange',
                 color: 'white',
                 px: 2, // 左右のパディングを追加
@@ -92,38 +79,10 @@ export default function MakeBook() {
             </Box>
           </Link>
 
+          <Box sx={{ flexGrow: 1 }} />
+
           <Button color="primary">下書き保存</Button>
           <Button color="primary">公開設定</Button>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
 
         </Toolbar>
       </AppBar>

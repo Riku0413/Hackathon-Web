@@ -16,6 +16,7 @@ import Result from "./Item-components/result";
 import HomeAppBar from "./Header-components/HomeAppBar";
 
 import SearchKeywords from "./Header-components/SearchKeywords";
+import MyPage from "./Page-components/mypage";
 
 function App() {
 
@@ -50,6 +51,13 @@ function App() {
             <Route path="/makeMovie/" element={<div><MakeMovie /></div>} />
             <Route path="/makeArticle/" element={<div><MakeArticle /></div>} />
             <Route path="/makeChapter/" element={<div><MakeChapter /></div>} />
+
+            <Route path="/mypage/" element={<div><HomeAppBar /><MyPage /></div>} />
+            <Route path="/setting/" element={<div><HomeAppBar /></div>} />
+            <Route path="/team/" element={<div><HomeAppBar /></div>} />
+            <Route path="/draft/" element={<div><HomeAppBar /></div>} />
+            <Route path="/notification/" element={<div><HomeAppBar /></div>} />
+
           </Routes>
         </BrowserRouter>
       </main>
