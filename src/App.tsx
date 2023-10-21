@@ -4,7 +4,7 @@ import Form from "./Form";
 import SignIn from "./auth-components/SignIn";
 import SignUp from "./auth-components/SignUp";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import MakeArticle from "./Post-components/MakeArticle";
+import MakeBlog from "./Post-components/MakeBlog";
 import Trend from "./Item-components/trend";
 import Books from "./Item-components/books";
 import Movie from "./Item-components/movie";
@@ -46,10 +46,10 @@ function App() {
             <Route path="/signUp/" element={<div><SignUp /></div>} />
             <Route path="/signIn/" element={<div><SignIn /></div>} />
 
-            <Route path="/post/" element={<div><MakeArticle /></div>} />
+            <Route path="/post/" element={<div><MakeBlog /></div>} />
             <Route path="/makeBook/" element={<div><MakeBook /></div>} />
             <Route path="/makeMovie/" element={<div><MakeMovie /></div>} />
-            <Route path="/makeArticle/" element={<div><MakeArticle /></div>} />
+            <Route path="/makeArticle/" element={<div><MakeBlog /></div>} />
             <Route path="/makeChapter/" element={<div><MakeChapter /></div>} />
 
             <Route path="/mypage/" element={<div><HomeAppBar /><MyPage /></div>} />

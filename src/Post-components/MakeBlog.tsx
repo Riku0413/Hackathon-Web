@@ -26,7 +26,7 @@ import { Link } from 'react-router-dom';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-export default function MakeArticle() {
+export default function MakeBlog() {
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
 
