@@ -63,7 +63,7 @@ const Form: FC = () => {
 
     try {
       // ボタンをクリックした際にデータを送信
-      const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/users", {
+      const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

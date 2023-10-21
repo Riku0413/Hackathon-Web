@@ -77,7 +77,9 @@ export default function BasicTabs() {
       }  
     }
     // setLoading(false);
-  }, [location]);
+  }, [location, user]);
+  //  ここら辺のlocatinoやuserなどの依存性の設定によってレンダリングに影響が出る
+  //  タブが正しく選択された状態から崩れる！
   
   return (
     <>
