@@ -2,33 +2,23 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-
 import Button from '@mui/material/Button';
 import { auth } from '../FirebaseConfig';
-// import LogOut from '../auth-components/LogOut';
-import { useState, useEffect } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { useState } from 'react';
 import BasicTabs from './BasicTabs';
-
 import SearchBar from './SearchBar';
-
-import { Route, Routes, Link, useLocation } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-
 import PersonIcon from '@mui/icons-material/Person';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -38,14 +28,16 @@ import MovieIcon from '@mui/icons-material/Movie';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import { useAuth } from '../AuthContext'; // AuthContext.js のファイルパスを指定
 // サインアウト用
 import Modal from '@mui/material/Modal';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 // 
+import { httpBlogMake } from '../http-components/http_blog_make';
 
-// サインアウト用
+
+// サインアウト用スタイル
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -59,6 +51,7 @@ const style = {
   p: 4,
 };
 
+// スタイル
 const buttonContainerStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -66,74 +59,26 @@ const buttonContainerStyle = {
 };
 //
 
+// メニューボタン一覧
 const settings = [
-  { text: 'マイページ', icon: <PersonIcon/> }, 
-  { text: '通知', icon: <NotificationsIcon/> }, 
-  { text: '下書き一覧', icon: <EditNoteIcon/> }, 
-  { text: '記事を作成', icon: <ArticleIcon/> }, 
-  { text: '本を執筆', icon: <MenuBookIcon/> }, 
-  { text: '動画を投稿', icon: <MovieIcon/> }, 
-  { text: 'チーム', icon: <GroupIcon/> }, 
-  { text: '設定', icon: <SettingsIcon/> }, 
+  { text: 'マイページ', icon: <PersonIcon/>, link: "/mypage" }, 
+  { text: '通知', icon: <NotificationsIcon/>, link: "/notification" }, 
+  { text: '下書き一覧', icon: <EditNoteIcon/>, link: "/draft" }, 
+  { text: '記事を作成', icon: <ArticleIcon/>, link: "/makeBlog" }, 
+  { text: '本を執筆', icon: <MenuBookIcon/>, link: "/makeBook" }, 
+  { text: '動画を投稿', icon: <MovieIcon/>, link: "/makeMovie" }, 
+  { text: 'チーム', icon: <GroupIcon/>, link: "/team" }, 
+  { text: '設定', icon: <SettingsIcon/>, link: "/setting" }, 
   { text: 'サインアウト', icon: <LogoutIcon/> }
 ];
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.black, 0.10),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.black, 0.15),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-  color: 'black' // color
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
 export default function HomeAppBar() {
 
-  const [user, setUser] = useState<User | null>(null);
-  // ここの Loading 判定が必要かどうかはしっかり考える必要がある
-  const [loading, setLoading] = useState(true);
-  // ログインしているかどうかをここでもしっかり判定する
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser: User | null) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-  }, []);
+  const {user, loading} = useAuth();
+  const [blog_id, setBlogId] = useState('');
 
+  // 引数として受け取ったパスに遷移する
   const handleClick = (path: string) => {
-    // 引数として受け取ったパスに遷移する
     window.location.href = path;
   };
 
@@ -172,8 +117,21 @@ export default function HomeAppBar() {
         window.location.href = '/draft'
         break;
       case '記事を作成':
-        window.location.href = '/makeArticle'
+        
+        const PostData = async () => {
+          while (loading) {
+            await new Promise(resolve => setTimeout(resolve, 500)); // 0.5秒ごとに確認する例
+          }
+          if (user) {
+            const result = await httpBlogMake(user.uid);
+            setBlogId(result); // ステートを更新
+            navigate(`/makeBlog/${result}`);
+          }
+        };
+        PostData();
+        // window.location.href = '/makeBlog'
         break;
+        
       case '本を執筆':
         window.location.href = '/makeBook'
         break;
@@ -194,20 +152,26 @@ export default function HomeAppBar() {
     }
   };
 
+  // const handleMenuItemClick = (menuItemText: string) => {
+  //   const selectedSetting = settings.find((setting) => setting.text === menuItemText);
+  
+  //   if (selectedSetting && selectedSetting.link) {
+  //     window.location.href = selectedSetting.link; // リンクがある場合はそのリンクに遷移
+  //   } else {
+  //     handleOpen()
+  //   }
+  // }
+  
   const location = useLocation();
   let content = null;
 
-  if (location.pathname === '/') {
-    content = <BasicTabs />;
-  } else if (location.pathname === '/blog') {
-    content = <BasicTabs />;
-  } else if (location.pathname === '/books') {
-    content = <BasicTabs />;
-  } else if (location.pathname === '/movie') {
-    content = <BasicTabs />;
-  } else if (location.pathname === '/favorite') {
-    content = <BasicTabs />;
-  } else if (location.pathname === '/result') {
+  if (location.pathname === '/'
+   || location.pathname === '/blog' 
+   || location.pathname === '/book'
+   || location.pathname === '/movie' 
+   || location.pathname === '/favorite' 
+   || location.pathname === '/result' 
+   ) {
     content = <BasicTabs />;
   } else if (location.pathname === '/search') {
     content = <SearchBar />;
@@ -218,14 +182,22 @@ export default function HomeAppBar() {
   // BasicTabs を二重でレンダリングするとバグるから注意！！！
   // あと上述のレンダリング構文はパスの語尾が完全一致する場合と思われる
 
-
   let marginTopValue = '150px'; // デフォルトの marginTop 値
 
+
+  // ここの設定がなぜかうまくいかない！！
   // パスによって marginTop 値を設定
   if (location.pathname === '/search') {
     marginTopValue = '200px'; // 例: 特定のパスに対する marginTop 値
+  } else if (location.pathname.startsWith('/draft/')) {
+    marginTopValue = '80px'; // 例: 特定のパスに対する marginTop 値
   }
 
+  const extractInitials = (email: string) => {
+    const firstChar = email.charAt(0);
+    return firstChar.toUpperCase();
+  };  
+  
   return (
     <>
       {!loading && (
@@ -262,9 +234,6 @@ export default function HomeAppBar() {
 
               {user? (
                 <>
-                  {/* <Button onClick={() => handleClick("/post")} variant="outlined" sx={{ mr: 1, color: '#555555' }} color='inherit'>post</Button>
-                  <LogOut/> */}
-
                   <IconButton
                     color="default" // ボタンの色を指定（primaryは例です）
                     component={Link}
@@ -278,7 +247,13 @@ export default function HomeAppBar() {
                   <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" sx={{backgroundColor: 'orangered'}} />
+                        {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" sx={{backgroundColor: 'orangered'}} /> */}
+                        {user.email? (
+                            <Avatar alt="a" sx={{backgroundColor: 'orangered'}}>
+                              {extractInitials(user.email)}
+                            </Avatar>
+                          ) : (null)
+                        }
                       </IconButton>
                     </Tooltip>
                     <Menu
@@ -301,7 +276,12 @@ export default function HomeAppBar() {
                         <MenuItem key={setting.text} onClick={handleCloseUserMenu}>
                           <Button
                             onClick={() => handleMenuItemClick(setting.text)}
-                            sx={{ display: 'flex', alignItems: 'center' }}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center', 
+                              color: 'dimgray', 
+                              // backgroundColor: "yellow" 
+                            }}
                           >
                             {setting.icon}
                             <Typography textAlign="center" sx={{ marginLeft: '8px' }}>
@@ -343,59 +323,17 @@ export default function HomeAppBar() {
               
             </Toolbar>
             
-
-            {/* <Routes>
-              <Route path="/search" element={<SearchBar />} />
-              <Route path="/" element={<BasicTabs />} />
-
-              <Route path="/blog" element={<BasicTabs />} />
-              <Route path="/books" element={<BasicTabs />} />
-              <Route path="/movie" element={<BasicTabs />} />
-              <Route path="/favorite" element={<BasicTabs />} />
-              <Route path="/result" element={<BasicTabs />} />
-            </Routes> */}
-
-            {/* ↓ この記述だと二重レンダリングされたバグる！！ */}
-
-            {/* {location.pathname === '/' && <BasicTabs />}
-            {location.pathname === '/blog' && <BasicTabs />}
-            {location.pathname === '/books' && <BasicTabs />}
-            {location.pathname === '/movie' && <BasicTabs />}
-            {location.pathname === '/favorite' && <BasicTabs />}
-            {location.pathname === '/result' && <BasicTabs />} */}
-
-
-
             {/* BasicTabs or SearchBar */}
             {content}
 
-
-
           </AppBar>
-
-          {/* <div style={{ marginTop: '64px' }}></div> */}
-
-          {/* <Routes>
-            <Route path="/search" element={<SearchBar />} />
-            <Route path="/" element={<SearchBar />} />
-            <Route path="/blog/" element={<BasicTabs />} />
-            <Route path="/books/" element={<BasicTabs />} />
-            <Route path="/movie/" element={<BasicTabs />} />
-            <Route path="/favorite/" element={<BasicTabs />} />
-            <Route path="/result/" element={<BasicTabs />} />
-          </Routes> */}
-
         </Box>
-      )}
+      )}      
 
       {/* Appbarの縦幅分下げる！！ */}
       <div style={{ marginTop: marginTopValue }}></div>
-
-      
       
     </>
-    
-
     
   );
 }

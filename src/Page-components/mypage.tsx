@@ -14,6 +14,8 @@ import CodeIcon from '@mui/icons-material/Code';
 import ImageIcon from '@mui/icons-material/Image';
 import TableChartIcon from '@mui/icons-material/TableChart';
 
+import { useAuth } from '../AuthContext';
+
 export default function MyPage() {
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
@@ -51,9 +53,7 @@ export default function MyPage() {
     console.log('Table button clicked');
   };
 
-
-
-
+  const {user, loading} = useAuth();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -61,7 +61,7 @@ export default function MyPage() {
       <Container
         // sx={{backgroundColor: 'green'}}
       >
-        <Box
+        {/* <Box
           sx={{
             flexGrow: 1,
             marginTop: '60px',
@@ -69,17 +69,17 @@ export default function MyPage() {
             flexDirection: 'column',
             // backgroundColor: 'red'
           }}
-        >
+        > */}
 
-          <Grid
+          {/* <Grid
             container
             spacing={0}
             sx={{
-              // backgroundColor: 'yellow',
+              backgroundColor: 'yellow',
               marginTop: '20px',
               flex: 1
             }}
-          >
+          > */}
             <Grid
               item
               xs={12}
@@ -118,7 +118,10 @@ export default function MyPage() {
                     src="/static/images/avatar/2.jpg" 
                     sx={{backgroundColor: 'orangered', width: '80px', height: '80px', fontSize: '40px'}}
                   />
-                  ここにユーザー名
+                  {/* ここにユーザー名 */}
+                  {user && user.email? (
+                    user.email
+                  ) : (null)}
                 </div>
                 <Grid container spacing={0}
                   // sx={{backgroundColor: 'lightgreen'}}
@@ -162,16 +165,16 @@ export default function MyPage() {
                 
               </div>
             </Grid>
-          </Grid>
+          {/* </Grid> */}
 
-          <Grid
+          {/* <Grid
             container
             spacing={0}
             sx={{
               // backgroundColor: 'yellow',
               flex: 1
             }}
-          >
+          > */}
             <Grid 
               item 
               xs={12} 
@@ -204,16 +207,16 @@ export default function MyPage() {
 
               </div>
             </Grid>
-          </Grid>
+          {/* </Grid> */}
 
-          <Grid
+          {/* <Grid
             container
             spacing={0}
             sx={{
               // backgroundColor: 'yellow',
               flex: 1
             }}
-          >
+          > */}
             <Grid 
               item 
               xs={12} 
@@ -246,9 +249,9 @@ export default function MyPage() {
 
               </div>
             </Grid>
-          </Grid>
+          {/* </Grid> */}
 
-        </Box>
+        {/* </Box> */}
       </Container>
 
     </Box>

@@ -1,34 +1,52 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import * as marked from 'marked';
-
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-
 import CodeIcon from '@mui/icons-material/Code';
 import ImageIcon from '@mui/icons-material/Image';
 import TableChartIcon from '@mui/icons-material/TableChart';
-
 import { Link } from 'react-router-dom';
+import Switch from '@mui/material/Switch';
+import { httpBlogMake } from '../http-components/http_blog_make';
+import { httpBlogPublish } from '../http-components/http_blog_publish';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { useAuth } from '../AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { httpBlogUpdate } from '../http-components/http_blog_update';
+import { httpFetcher } from '../http-components/http_fetcher';
+
+import useSWR from "swr";
+
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+interface BlogData {
+  id: string;
+  title: string;
+  content: string;
+  user_id: string;
+  birth_time: string;
+  update_time: string;
+  publish: boolean;
+}
 
 export default function MakeBlog() {
+  const [title, setTitle] = useState<string>('');
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
+  const [data, setData] = useState(null);
+
+  const {user, loading} = useAuth();
+  const [blog_id, setBlogId] = useState('');
+  const location = useLocation();
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
@@ -37,7 +55,15 @@ export default function MakeBlog() {
     // マークダウンをHTMLに変換してプレビューに表示
     const htmlText = marked.parse(inputText);
     setHtmlOutput(htmlText);
+
+    httpBlogUpdate(blog_id, title, inputText)
   };
+
+  const handleTitleInputChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    await setTitle(input); // タイトルの更新が完了するまで待つ
+    await httpBlogUpdate(blog_id, input, markdownInput); // タイトルの更新後に更新処理を実行
+  };  
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -64,23 +90,66 @@ export default function MakeBlog() {
   };
 
 
+  // レンダリング時にポスト
+  useEffect(() => {
+    // const PostData = async () => {
+    //   while (loading) {
+    //     await new Promise(resolve => setTimeout(resolve, 500)); // 0.5秒ごとに確認する例
+    //   }
+    //   if (user) {
+    //     const result = await httpBlogMake(user.uid);
+    //     setBlogId(result); // ステートを更新
+    //   }
+    // };
+    // PostData();
+    
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    setBlogId(lastSegment);
 
+    // ここで改めて、getリクエスト送りたい！
+    // GETリクエストの定型文！
+    // const { data: blog, error } = useSWR<BlogData[]>(
+    //   "http://localhost:8080/blog",
+    //   httpFetcher
+    // );
 
+    // ここで、パラメータ or パスの末尾 として、blog_idをバックエンドに送る必要がある
+    // さらにその送ったblog_idを受け取ってパースする処理をバックエンドに記述する必要がある
 
-
+    // このcomponentの読み込み＝blogの作成、に同期させて作った作ったblogデータを
+    // ここで、取得しているけど、必要ある？
+    httpFetcher(`http://localhost:8080/blog/${lastSegment}`)
+    .then(result => {
+      setData(result);
+      // デバック用
+      console.log(result);
+      setTitle(result.title);
+      setMarkdownInput(result.content);
+      // マークダウンをHTMLに変換してプレビューに表示
+      const htmlText = marked.parse(result.content);
+      setHtmlOutput(htmlText);
+    });
+  
+  }, [user, loading]);
+  
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+  const [isDraft, setIsDraft] = useState(false);
+
+  const toggleSwitch = () => {
+    setIsDraft(!isDraft);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const navigate = useNavigate();
+
+  // 公開 or 下書き保存
+  const handlePutRequest = () => {
+    // if (isDraft) {
+      httpBlogPublish(blog_id, isDraft)
+    // }
+    navigate("/draft")
   };
-
-
-
-
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -105,8 +174,11 @@ export default function MakeBlog() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Button color="primary">下書き保存</Button>
-          <Button color="primary">公開設定</Button>
+          <div style={{ color: 'gray', marginLeft: "10px", fontSize: "15px" }}>公開設定</div>
+          <Switch onChange={toggleSwitch} checked={isDraft} />
+          <Button color="primary" variant='outlined' style={{ width: '104px', height: '35px' }} onClick={handlePutRequest}>
+            {isDraft ? '公開する' : '下書き保存'}
+          </Button>
 
         </Toolbar>
       </AppBar>
@@ -163,6 +235,8 @@ export default function MakeBlog() {
                     fontSize: '24px',
                     // backgroundColor: 'purple'
                   }}
+                  value={title}
+                  onChange={handleTitleInputChange}
                 />
               </div>
             </Grid>

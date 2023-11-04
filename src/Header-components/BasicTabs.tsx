@@ -8,6 +8,8 @@ import { auth } from '../FirebaseConfig';
 import { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 
+import { useAuth } from '../AuthContext'; // AuthContext.js のファイルパスを指定
+
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
@@ -23,16 +25,18 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
-  const [user, setUser] = useState<User | null>(null);
-  // ここの Loading 判定が必要かどうかはしっかり考える必要がある
-  const [loading, setLoading] = useState(true);
-  // ログインしているかどうかをここでもしっかり判定する
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser: User | null) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-  }, []);
+  // const [user, setUser] = useState<User | null>(null);
+  // // ここの Loading 判定が必要かどうかはしっかり考える必要がある
+  // const [loading, setLoading] = useState(true);
+  // // ログインしているかどうかをここでもしっかり判定する
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (currentUser: User | null) => {
+  //     setUser(currentUser);
+  //     setLoading(false);
+  //   });
+  // }, []);
+
+  const user = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -47,7 +51,7 @@ export default function BasicTabs() {
         case '/blog':
           setValue(2);
           break;
-        case '/books':
+        case '/book':
           setValue(3);
           break;
         case '/movie':
@@ -80,10 +84,10 @@ export default function BasicTabs() {
   }, [location, user]);
   //  ここら辺のlocatinoやuserなどの依存性の設定によってレンダリングに影響が出る
   //  タブが正しく選択された状態から崩れる！
-  
+
   return (
     <>
-      {!loading && (
+    
         <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs
@@ -143,9 +147,9 @@ export default function BasicTabs() {
               }}
             />
             <Tab
-              label="books"
+              label="book"
               component={Link}
-              to="/books"
+              to="/book"
               {...a11yProps(3)}
               sx={{
                 '&.Mui-selected': {
@@ -167,7 +171,7 @@ export default function BasicTabs() {
           </Tabs>
         </Box>
       </Box>
-      )}
+      
 
     </>
   );

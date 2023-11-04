@@ -2,7 +2,7 @@ import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 
-export default function Books() {
+export default function Book() {
   return (
     <Container>
       Trend books

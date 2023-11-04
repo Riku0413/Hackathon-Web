@@ -19,6 +19,8 @@ import { auth } from '../FirebaseConfig';
 import { Navigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { useAuth } from '../AuthContext';
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -41,6 +43,7 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    // console.log("submit");
 
     try {
       await signInWithEmailAndPassword(
@@ -48,6 +51,7 @@ export default function SignUp() {
         loginEmail,
         loginPassword
       );
+      console.log("point 2");
     } catch(error: any) {
 
       // エラーコードを取得
@@ -77,17 +81,20 @@ export default function SignUp() {
     }
   };
 
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const {user, loading} = useAuth();
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-  });
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //   });
+  // });
 
   return (
     <>
-      {user ? (
+    {!loading && (
+    <>
+    {user ? (
         <Navigate to={`/`} /> // 登録したらトップページにリダイレクト！
       ) : (
           <>
@@ -183,6 +190,9 @@ export default function SignUp() {
             </ThemeProvider>
           </>
         )}
+    </>
+    )}
+      
     </>
   );
 }
