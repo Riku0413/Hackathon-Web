@@ -9,33 +9,33 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../FirebaseConfig';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-import { httpBlogDelete } from '../http-components/http_blog_delete';
+import { httpBookDelete } from '../http-components/http_book_delete';
 
 
-interface BlogData {
+interface BookData {
   id: string;
-  title: string;
-  content: string;
   user_id: string;
+  title: string;
   birth_time: string;
   update_time: string;
   publish: boolean;
+  introduction: string;
 }
 
-export default function MyBlogList() {
+export default function MyBookList() {
   const {user, loading} = useAuth();
-  const [blogs, setBlogs] = useState<BlogData[]>();
+  const [books, setBooks] = useState<BookData[]>();
 
   useEffect(() => {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`http://localhost:8080/blogs/draft/${user.uid}`)
+          httpFetcher(`http://localhost:8080/books/draft/${user.uid}`)
           .then(result => {
-            setBlogs(result);
+            setBooks(result);
             console.log(result);
           });
         }
@@ -50,8 +50,8 @@ export default function MyBlogList() {
     //   httpFetcher
     // );
     
-    console.log("these are blogs!")
-    console.log(blogs)
+    console.log("these are books!")
+    console.log(books)
 
     // ここで改めて、getリクエスト送りたい！
     // GETリクエストの定型文！
@@ -74,12 +74,13 @@ export default function MyBlogList() {
   
   }, [user, loading]);
 
-  const handleDeleteClick = async (blog_id: string) => {
-    await httpBlogDelete(blog_id)
+  const handleDeleteClick = async (book_id: string) => {
+    // ↓このリクエストでchapterもまとめて消す！
+    await httpBookDelete(book_id)
     if (user) {
-      httpFetcher(`http://localhost:8080/blogs/draft/${user.uid}`)
+      httpFetcher(`http://localhost:8080/books/draft/${user.uid}`)
       .then(result => {
-        setBlogs(result);
+        setBooks(result);
         console.log(result);
       });
     }
@@ -101,9 +102,9 @@ export default function MyBlogList() {
       >
 
         <div>
-          {blogs && blogs.length > 0 ? (
+          {books && books.length > 0 ? (
             <div style={{ display: 'flex' }}>
-              {blogs.map((blog, index) => (
+              {books.map((book, index) => (
                 <div key={index}>
                   
                   <Paper
@@ -127,7 +128,7 @@ export default function MyBlogList() {
                         textAlign: 'center',
                       }}
                     >
-                      {blog.title? blog.title : "no title"}
+                      {book.title? book.title : "no title"}
                     </div>
 
                     {/* 更新時間を左下に配置 */}
@@ -140,7 +141,7 @@ export default function MyBlogList() {
                         background: 'rgba(255, 255, 255, 0.7)',
                       }}
                     >
-                      {blog.update_time.split(" ")[0]}
+                      {book.update_time.split(" ")[0]}
                     </div>
 
                     {/* ボタンを右下に配置 */}
@@ -152,17 +153,16 @@ export default function MyBlogList() {
                         padding: '8px',
                       }}
                     >
-
-                      <Link to={`/makeBlog/${blog.id}`} > {/* リンクにスタイルを適用 */}
+                      <Link to={`/makeBook/${book.id}`} > {/* リンクにスタイルを適用 */}
                         <Fab color="default" aria-label="edit" size="small">
                           <EditIcon />
                         </Fab>
                       </Link>
-                      
-                      <Fab color="default" aria-label="edit" size="small" sx={{ml: "10px"}} onClick={() => handleDeleteClick(blog.id)}>
+
+                      <Fab color="default" aria-label="edit" size="small" sx={{ml: "10px"}} onClick={() => handleDeleteClick(book.id)}>
                         <DeleteIcon />
                       </Fab>
-                      
+
                     </div>
 
                   </Paper>
@@ -172,7 +172,7 @@ export default function MyBlogList() {
               ))}
             </div>
           ) : (
-            <p>No blogs available</p>
+            <p>No books available</p>
           )}
         </div>
         

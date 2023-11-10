@@ -2,7 +2,18 @@ import React from 'react';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
+// import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 const SearchKeywords: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q');
+
+  if (qParam) {
+    // qパラメータが存在する場合、コンポーネントを非表示にする
+    return null;
+  }
+
   const handlePaperClick = (index: number): void => {
     console.log(`Paper ${index + 1} clicked`);
     // ここにクリックイベントを追加
@@ -25,3 +36,4 @@ const SearchKeywords: React.FC = () => {
 };
 
 export default SearchKeywords;
+

@@ -35,6 +35,8 @@ import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 // 
 import { httpBlogMake } from '../http-components/http_blog_make';
+import { httpBookMake } from '../http-components/http_book_make';
+import { httpVideoMake } from '../http-components/http_video_make';
 
 
 // サインアウト用スタイル
@@ -66,7 +68,7 @@ const settings = [
   { text: '下書き一覧', icon: <EditNoteIcon/>, link: "/draft" }, 
   { text: '記事を作成', icon: <ArticleIcon/>, link: "/makeBlog" }, 
   { text: '本を執筆', icon: <MenuBookIcon/>, link: "/makeBook" }, 
-  { text: '動画を投稿', icon: <MovieIcon/>, link: "/makeMovie" }, 
+  { text: '動画を投稿', icon: <MovieIcon/>, link: "/makeVideo" }, 
   { text: 'チーム', icon: <GroupIcon/>, link: "/team" }, 
   { text: '設定', icon: <SettingsIcon/>, link: "/setting" }, 
   { text: 'サインアウト', icon: <LogoutIcon/> }
@@ -75,19 +77,24 @@ const settings = [
 export default function HomeAppBar() {
 
   const {user, loading} = useAuth();
-  const [blog_id, setBlogId] = useState('');
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   // 引数として受け取ったパスに遷移する
   const handleClick = (path: string) => {
     window.location.href = path;
   };
 
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const handleSearchClick = () => {
+    const searchParams = new URLSearchParams(location.search);
+    if (!searchParams.has('q')) {
+      // qパラメータが存在しない場合のみ遷移
+      window.location.href = '/search';
+    }
+  };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -105,7 +112,7 @@ export default function HomeAppBar() {
   }
   //
 
-  const handleMenuItemClick = (menuItemText: string) => {
+  const handleMenuItemClick = async (menuItemText: string) => {
     switch (menuItemText) {
       case 'マイページ':
         window.location.href = '/mypage'
@@ -118,26 +125,30 @@ export default function HomeAppBar() {
         break;
       case '記事を作成':
         
-        const PostData = async () => {
-          while (loading) {
-            await new Promise(resolve => setTimeout(resolve, 500)); // 0.5秒ごとに確認する例
-          }
-          if (user) {
-            const result = await httpBlogMake(user.uid);
-            setBlogId(result); // ステートを更新
-            navigate(`/makeBlog/${result}`);
-          }
-        };
-        PostData();
-        // window.location.href = '/makeBlog'
+        if (user) {
+          const result = await httpBlogMake(user.uid);
+          navigate(`/makeBlog/${result}`);
+        }
         break;
         
       case '本を執筆':
-        window.location.href = '/makeBook'
+
+        // window.location.href = '/makeBook'
+        if (user) {
+          const result = await httpBookMake(user.uid);
+          navigate(`/makeBook/${result}`);
+        }
         break;
+
       case '動画を投稿':
-        window.location.href = '/makeMovie'
+
+        // window.location.href = '/makeMovie'
+        if (user) {
+          const result = await httpVideoMake(user.uid);
+          navigate(`/makeVideo/${result}`);
+        }
         break;
+        
       case 'チーム':
         window.location.href = '/team'
         break;
@@ -151,16 +162,6 @@ export default function HomeAppBar() {
         break;
     }
   };
-
-  // const handleMenuItemClick = (menuItemText: string) => {
-  //   const selectedSetting = settings.find((setting) => setting.text === menuItemText);
-  
-  //   if (selectedSetting && selectedSetting.link) {
-  //     window.location.href = selectedSetting.link; // リンクがある場合はそのリンクに遷移
-  //   } else {
-  //     handleOpen()
-  //   }
-  // }
   
   const location = useLocation();
   let content = null;
@@ -168,7 +169,7 @@ export default function HomeAppBar() {
   if (location.pathname === '/'
    || location.pathname === '/blog' 
    || location.pathname === '/book'
-   || location.pathname === '/movie' 
+   || location.pathname === '/video' 
    || location.pathname === '/favorite' 
    || location.pathname === '/result' 
    ) {
@@ -183,7 +184,6 @@ export default function HomeAppBar() {
   // あと上述のレンダリング構文はパスの語尾が完全一致する場合と思われる
 
   let marginTopValue = '150px'; // デフォルトの marginTop 値
-
 
   // ここの設定がなぜかうまくいかない！！
   // パスによって marginTop 値を設定
@@ -224,10 +224,17 @@ export default function HomeAppBar() {
 
               <Box sx={{ flexGrow: 1 }} />
 
-              <IconButton
+              {/* <IconButton
                 color="default" // ボタンの色を指定（primaryは例です）
                 component={Link}
                 to="/search"
+              >
+                <SearchIcon />
+              </IconButton> */}
+
+              <IconButton
+                color="default"
+                onClick={handleSearchClick}
               >
                 <SearchIcon />
               </IconButton>

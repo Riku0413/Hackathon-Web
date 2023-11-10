@@ -2,10 +2,10 @@ import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 
-export default function Movie() {
+export default function Video() {
   return (
     <Container>
-      Trend movies
+      Trend videos
       <Box
         sx={{
           display: 'flex',
@@ -60,7 +60,7 @@ export default function Movie() {
         </Paper>
       </Box>
 
-      Popular movies
+      Popular videos
       <Box
         sx={{
           display: 'flex',

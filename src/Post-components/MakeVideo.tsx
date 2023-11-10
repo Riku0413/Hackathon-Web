@@ -19,30 +19,44 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 
 import { Link } from 'react-router-dom';
+import { Switch } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAuth } from '../AuthContext';
+
+import { httpBookPublish } from '../http-components/http_book_publish';
+import { httpFetcher } from '../http-components/http_fetcher';
+import { httpBookUpdate } from '../http-components/http_book_update';
+import { httpChapterMake } from '../http-components/http_chapter_make';
+import { httpVideoMake } from '../http-components/http_video_make';
+import { httpVideoUpdate } from '../http-components/http_video_update';
+import { httpVideoPublish } from '../http-components/http_video_publish';
+
+import Fab from '@mui/material/Fab';
+import EditIcon from '@mui/icons-material/Edit';
+import YouTubeVideo from '../youtube';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-export default function MakeMovie() {
-  const [markdownInput, setMarkdownInput] = useState<string>('');
-  const [htmlOutput, setHtmlOutput] = useState<string>('');
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const inputText = e.target.value;
-    setMarkdownInput(inputText);
 
-    // マークダウンをHTMLに変換してプレビューに表示
-    const htmlText = marked.parse(inputText);
-    setHtmlOutput(htmlText);
-  };
+interface ChapterData {
+  id: string;
+  title: string;
+  update_time: string;
+}
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
 
+export default function MakeVideo() {
+  const [title, setTitle] = useState<string>('');
+  const [introduction, setIntroduction] = useState<string>('');
+  const [url, setURL] = useState<string>("");
+
+  const {user, loading} = useAuth();
+  const [video_id, setVideoId] = useState('');
+  const [isDraft, setIsDraft] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -54,17 +68,52 @@ export default function MakeMovie() {
     setAnchorElUser(null);
   };
 
-  const handleButtonClick = () => {
-    // ボタンがクリックされたときの処理をここに追加
+  const toggleSwitch = () => {
+    console.log(!isDraft);
+    setIsDraft(!isDraft);
   };
 
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  useEffect(() => {
+    
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    setVideoId(lastSegment)
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      // ファイルを選択した場合、最初のファイルを取得
-      setVideoFile(e.target.files[0]);
-    }
+    // GETリクエストはパスで取得したいデータを指定
+    httpFetcher(`http://localhost:8080/video/${lastSegment}`)
+    .then(result => {
+      console.log(result)
+      setTitle(result.title);
+      setIntroduction(result.introduction);
+      setURL(result.url.Scheme+"://"+result.url.Host+result.url.Path+"?"+result.url.RawQuery);
+    });
+  
+  }, [user, loading]);
+
+  // 公開 or 下書き保存
+  const handlePutRequest = () => {
+    // POSTリクエストはデータIDで宛先を指定
+    console.log(isDraft);
+    httpVideoPublish(video_id, isDraft)
+    navigate("/draft/video")
+  };
+
+  const handleTitleInputChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    await setTitle(input); // タイトルの更新が完了するまで待つ
+    await httpVideoUpdate(video_id, input, introduction, url); // タイトルの更新後に更新処理を実行
+  };  
+  
+  const handleIntroductionInputChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    await setIntroduction(input); // タイトルの更新が完了するまで待つ
+    await httpVideoUpdate(video_id, title, input, url); // タイトルの更新後に更新処理を実行
+  };  
+
+  const handleUrlInputChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    await setURL(input); // タイトルの更新が完了するまで待つ
+    await httpVideoUpdate(video_id, title, introduction, input); // タイトルの更新後に更新処理を実行
   };
 
   return (
@@ -90,8 +139,11 @@ export default function MakeMovie() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Button color="primary">下書き保存</Button>
-          <Button color="primary">公開設定</Button>
+          <div style={{ color: 'gray', marginLeft: "10px", fontSize: "15px" }}>公開設定</div>
+          <Switch onChange={toggleSwitch} checked={isDraft} />
+          <Button color="primary" variant='outlined' style={{ width: '104px', height: '35px' }} onClick={handlePutRequest}>
+            {isDraft ? '公開する' : '下書き保存'}
+          </Button>
 
         </Toolbar>
       </AppBar>
@@ -124,6 +176,7 @@ export default function MakeMovie() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
+              タイトル
               <div
                 style={{
                   margin: '20px',
@@ -148,6 +201,8 @@ export default function MakeMovie() {
                     fontSize: '24px',
                     // backgroundColor: 'purple'
                   }}
+                  value={title}
+                  onChange={handleTitleInputChange}
                 />
               </div>
             </Grid>
@@ -168,6 +223,7 @@ export default function MakeMovie() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
+              動画の説明
               <div
                 style={{
                   margin: '20px',
@@ -175,7 +231,7 @@ export default function MakeMovie() {
                   padding: '5px',
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  minHeight: '40px',
+                  minHeight: '30px',
                   display: 'flex',
                   flexDirection: 'column',
                   // backgroundColor: 'purple',
@@ -189,9 +245,11 @@ export default function MakeMovie() {
                     resize: 'none',
                     outline: 'none',
                     flex: 1,
-                    fontSize: '24px',
+                    fontSize: '18px',
                     // backgroundColor: 'purple'
                   }}
+                  value={introduction}
+                  onChange={handleIntroductionInputChange}
                 />
               </div>
             </Grid>
@@ -200,71 +258,55 @@ export default function MakeMovie() {
           <Grid
             container
             spacing={0}
-            // sx={{backgroundColor: 'lightgreen'}}
+            sx={{
+              // backgroundColor: 'yellow',
+              marginTop: '20px',
+              flex: 1
+            }}
           >
             <Grid
               item
               xs={12}
               md={12}
-              // sx={{backgroundColor: 'blue'}}
+              // sx={{ backgroundColor: 'orange' }}
             >
+              動画のURL
               <div
                 style={{
                   margin: '20px',
-                  padding: '20px',
+                  marginBottom: 0, // だいたい
+                  padding: '5px',
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  minHeight: '20px',
+                  minHeight: '30px',
                   display: 'flex',
                   flexDirection: 'column',
-                  backgroundColor: 'pink'
+                  // backgroundColor: 'purple',
                 }}
               >
-                {videoFile ? (
-                  <video
-                    width="100%"
-                    controls
-                  >
-                    <source src={URL.createObjectURL(videoFile)} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <p>動画をアップロードしてください</p>
-                )}
+                <TextareaAutosize
+                  placeholder="ここにYouTubeの動画リンクを添付しよう"
+                  style={{
+                    border: 'none',
+                    width: '100%',
+                    resize: 'none',
+                    outline: 'none',
+                    flex: 1,
+                    fontSize: '18px',
+                    // backgroundColor: 'purple'
+                  }}
+                  value={url}
+                  onChange={handleUrlInputChange}
+                />
+                
               </div>
 
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleFileChange}
-                  style={{ display: 'none' }} // ファイル選択ボタンを非表示にする
-                  id="video-upload" // ここが重要
-                />
-                <label
-                  htmlFor="video-upload"
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    padding: '10px 20px',
-                    backgroundColor: 'blue',
-                    color: 'white',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  アップロードする動画を選択
-                </label>
-
+              <div>
+                {url? <YouTubeVideo videoUrl={url} /> : null}
+                {/* <YouTubeVideo videoUrl="https://youtu.be/KqIT4a7X6KE?si=uiRLcAYp5xy5FHCa" /> */}
               </div>
 
             </Grid>
-
           </Grid>
 
         </Box>

@@ -54,7 +54,7 @@ export default function BasicTabs() {
         case '/book':
           setValue(3);
           break;
-        case '/movie':
+        case '/video':
           setValue(4);
           break;
         default:
@@ -72,7 +72,7 @@ export default function BasicTabs() {
         case '/books':
           setValue(2);
           break;
-        case '/movie':
+        case '/video':
           setValue(3);
           break;
         default:
@@ -158,9 +158,9 @@ export default function BasicTabs() {
               }}
             />
             <Tab
-              label="movie"
+              label="video"
               component={Link}
-              to="/movie"
+              to="/video"
               {...a11yProps(4)}
               sx={{
                 '&.Mui-selected': {

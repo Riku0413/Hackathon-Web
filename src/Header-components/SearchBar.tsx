@@ -4,6 +4,9 @@ import Toolbar from '@mui/material/Toolbar';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { ChangeEvent, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 20,
@@ -50,6 +53,42 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchBar() {
+  const [searchText, setSearchText] = useState<string>('');
+  const [imeComposing, setImeComposing] = useState<boolean>(false);
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q');
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === 'Enter' && !imeComposing && searchText) {
+      // 空欄じゃなくて、Enterキーが押されて、かつ変換中でない場合に検索を実行
+      console.log('Searching for:', searchText);
+      navigate(`/search?q=${searchText}`);
+    }
+  };
+
+  // IMEの変換中状態を監視
+  useEffect(() => {
+    if (qParam) {
+      setSearchText(qParam)
+    }
+    
+    const handleCompositionStart = () => {
+      setImeComposing(true);
+    };
+    
+    const handleCompositionEnd = () => {
+      setImeComposing(false);
+    };
+    
+    document.addEventListener('compositionstart', handleCompositionStart);
+    document.addEventListener('compositionend', handleCompositionEnd);
+    
+    return () => {
+      document.removeEventListener('compositionstart', handleCompositionStart);
+      document.removeEventListener('compositionend', handleCompositionEnd);
+    };
+  }, [qParam]);
   
   return (
     <Box sx={{
@@ -68,6 +107,9 @@ export default function SearchBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={handleKeyPress}  
             />
           </Search>          
 

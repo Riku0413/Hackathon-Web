@@ -12,30 +12,31 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
 
-import { httpBlogDelete } from '../http-components/http_blog_delete';
+import { httpVideoDelete } from '../http-components/http_video_delete';
 
 
-interface BlogData {
+interface VideoData {
   id: string;
   title: string;
-  content: string;
+  introduction: string;
+  url: string;
   user_id: string;
   birth_time: string;
   update_time: string;
   publish: boolean;
 }
 
-export default function MyBlogList() {
+export default function MyVideoList() {
   const {user, loading} = useAuth();
-  const [blogs, setBlogs] = useState<BlogData[]>();
+  const [videos, setVideos] = useState<VideoData[]>();
 
   useEffect(() => {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`http://localhost:8080/blogs/draft/${user.uid}`)
+          httpFetcher(`http://localhost:8080/videos/draft/${user.uid}`)
           .then(result => {
-            setBlogs(result);
+            setVideos(result);
             console.log(result);
           });
         }
@@ -50,8 +51,8 @@ export default function MyBlogList() {
     //   httpFetcher
     // );
     
-    console.log("these are blogs!")
-    console.log(blogs)
+    console.log("these are videos!")
+    console.log(videos)
 
     // ここで改めて、getリクエスト送りたい！
     // GETリクエストの定型文！
@@ -74,12 +75,12 @@ export default function MyBlogList() {
   
   }, [user, loading]);
 
-  const handleDeleteClick = async (blog_id: string) => {
-    await httpBlogDelete(blog_id)
+  const handleDeleteClick = async (video_id: string) => {
+    await httpVideoDelete(video_id)
     if (user) {
-      httpFetcher(`http://localhost:8080/blogs/draft/${user.uid}`)
+      httpFetcher(`http://localhost:8080/videos/draft/${user.uid}`)
       .then(result => {
-        setBlogs(result);
+        setVideos(result);
         console.log(result);
       });
     }
@@ -101,9 +102,9 @@ export default function MyBlogList() {
       >
 
         <div>
-          {blogs && blogs.length > 0 ? (
+          {videos && videos.length > 0 ? (
             <div style={{ display: 'flex' }}>
-              {blogs.map((blog, index) => (
+              {videos.map((video, index) => (
                 <div key={index}>
                   
                   <Paper
@@ -127,7 +128,7 @@ export default function MyBlogList() {
                         textAlign: 'center',
                       }}
                     >
-                      {blog.title? blog.title : "no title"}
+                      {video.title? video.title : "no title"}
                     </div>
 
                     {/* 更新時間を左下に配置 */}
@@ -140,7 +141,7 @@ export default function MyBlogList() {
                         background: 'rgba(255, 255, 255, 0.7)',
                       }}
                     >
-                      {blog.update_time.split(" ")[0]}
+                      {video.update_time.split(" ")[0]}
                     </div>
 
                     {/* ボタンを右下に配置 */}
@@ -153,13 +154,13 @@ export default function MyBlogList() {
                       }}
                     >
 
-                      <Link to={`/makeBlog/${blog.id}`} > {/* リンクにスタイルを適用 */}
+                      <Link to={`/makeVideo/${video.id}`} > {/* リンクにスタイルを適用 */}
                         <Fab color="default" aria-label="edit" size="small">
                           <EditIcon />
                         </Fab>
                       </Link>
                       
-                      <Fab color="default" aria-label="edit" size="small" sx={{ml: "10px"}} onClick={() => handleDeleteClick(blog.id)}>
+                      <Fab color="default" aria-label="edit" size="small" sx={{ml: "10px"}} onClick={() => handleDeleteClick(video.id)}>
                         <DeleteIcon />
                       </Fab>
                       
@@ -172,7 +173,7 @@ export default function MyBlogList() {
               ))}
             </div>
           ) : (
-            <p>No blogs available</p>
+            <p>No videos available</p>
           )}
         </div>
         

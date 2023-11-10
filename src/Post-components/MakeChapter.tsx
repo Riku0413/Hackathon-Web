@@ -1,122 +1,99 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import * as marked from 'marked';
-
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-
 import CodeIcon from '@mui/icons-material/Code';
 import ImageIcon from '@mui/icons-material/Image';
 import TableChartIcon from '@mui/icons-material/TableChart';
-
 import { Link } from 'react-router-dom';
-
+import Switch from '@mui/material/Switch';
+import { useAuth } from '../AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { httpFetcher } from '../http-components/http_fetcher';
+import { httpChapterUpdate } from '../http-components/http_chapter_update';
+
 
 export default function MakeChapter() {
+  const [title, setTitle] = useState<string>('');
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
+  const [isDraft, setIsDraft] = useState(false);
+  const [book_id, setBookId] = useState('');
+  const [chapter_id, setChapterId] = useState('');
+  const {user, loading} = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
     setMarkdownInput(inputText);
 
     // マークダウンをHTMLに変換してプレビューに表示
     const htmlText = marked.parse(inputText);
     setHtmlOutput(htmlText);
+    
+    // POSTリクエストはデータIDで宛先を指定
+    httpChapterUpdate(chapter_id, title, inputText)
   };
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+  const handleTitleInputChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    await setTitle(input); // タイトルの更新が完了するまで待つ
+    await httpChapterUpdate(chapter_id, input, markdownInput); // タイトルの更新後に更新処理を実行
+  };  
 
   // ボタンがクリックされたときの処理を定義
   const handleCodeButtonClick = () => {
     // ここにコードボタンがクリックされたときの処理を追加
     console.log('Code button clicked');
   };
-
   const handleImageButtonClick = () => {
     // ここにイメージボタンがクリックされたときの処理を追加
     console.log('Image button clicked');
   };
-
   const handleTableButtonClick = () => {
     // ここにテーブルボタンがクリックされたときの処理を追加
     console.log('Table button clicked');
   };
 
-  const ArrowBackButtonClick = () => {
-    // ここにテーブルボタンがクリックされたときの処理を追加
-    console.log('ArrowBack button clicked');
-  };
 
+  useEffect(() => {
+    
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    setChapterId(lastSegment)
 
-
-
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-
-
-
+    // GETリクエストはパスで取得したいデータを指定
+    httpFetcher(`http://localhost:8080/chapter/${lastSegment}`)
+    .then(result => {
+      setTitle(result.title);
+      setMarkdownInput(result.content);
+      const htmlText = marked.parse(result.content);
+      setHtmlOutput(htmlText);
+      setBookId(result.book_id);
+    });
+  
+  }, [user, loading]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed"  sx={{backgroundColor: "white"}}>
         <Toolbar>
 
-          {/* <Link to="/" style={{ textDecoration: 'none' }}>
-            <Box
-              sx={{
-                // display: { xs: 'none', sm: 'block' },
-                backgroundColor: 'orange',
-                color: 'white',
-                px: 2, // 左右のパディングを追加
-                borderRadius: 1
-              }}
-            >
-                <Typography variant="h6" noWrap component="div">
-                  Forest
-                </Typography>
-            </Box>
-          </Link> */}
+          <Link to={`/makeBook/${book_id}`} style={{ textDecoration: 'none' }}>
+            <ArrowBackIcon></ArrowBackIcon>
+          </Link>
 
-
-          <IconButton color='primary' onClick={ArrowBackButtonClick}>
-            <ArrowBackIcon />
-          </IconButton>
-
-          <Box sx={{ flexGrow: 1 }} />
-
-          <Button color="primary">下書き保存</Button>
-          <Button color="primary">公開設定</Button>
+          {/* <Box sx={{ flexGrow: 1 }} /> */}
 
         </Toolbar>
       </AppBar>
@@ -163,7 +140,7 @@ export default function MakeChapter() {
                 }}
               >
                 <TextareaAutosize
-                  placeholder="ページタイトル"
+                  placeholder="ページのタイトル"
                   style={{
                     border: 'none',
                     width: '100%',
@@ -173,6 +150,8 @@ export default function MakeChapter() {
                     fontSize: '24px',
                     // backgroundColor: 'purple'
                   }}
+                  value={title}
+                  onChange={handleTitleInputChange}
                 />
               </div>
             </Grid>
@@ -255,7 +234,7 @@ export default function MakeChapter() {
                     // backgroundColor: 'purple'
                   }}
                   value={markdownInput}
-                  onChange={handleInputChange}
+                  onChange={handleTextInputChange}
                 />
               </div>
             </Grid>

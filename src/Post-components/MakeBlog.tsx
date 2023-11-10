@@ -7,8 +7,6 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import * as marked from 'marked';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import CodeIcon from '@mui/icons-material/Code';
@@ -16,46 +14,33 @@ import ImageIcon from '@mui/icons-material/Image';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
-import { httpBlogMake } from '../http-components/http_blog_make';
-import { httpBlogPublish } from '../http-components/http_blog_publish';
-
 import { useAuth } from '../AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { httpBlogUpdate } from '../http-components/http_blog_update';
+
 import { httpFetcher } from '../http-components/http_fetcher';
+import { httpBlogUpdate } from '../http-components/http_blog_update';
+import { httpBlogPublish } from '../http-components/http_blog_publish';
 
-import useSWR from "swr";
-
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
-interface BlogData {
-  id: string;
-  title: string;
-  content: string;
-  user_id: string;
-  birth_time: string;
-  update_time: string;
-  publish: boolean;
-}
 
 export default function MakeBlog() {
   const [title, setTitle] = useState<string>('');
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
-  const [data, setData] = useState(null);
-
-  const {user, loading} = useAuth();
+  const [isDraft, setIsDraft] = useState(false);
   const [blog_id, setBlogId] = useState('');
+  const {user, loading} = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
     setMarkdownInput(inputText);
 
     // マークダウンをHTMLに変換してプレビューに表示
     const htmlText = marked.parse(inputText);
     setHtmlOutput(htmlText);
-
+    
+    // POSTリクエストはデータIDで宛先を指定
     httpBlogUpdate(blog_id, title, inputText)
   };
 
@@ -65,89 +50,47 @@ export default function MakeBlog() {
     await httpBlogUpdate(blog_id, input, markdownInput); // タイトルの更新後に更新処理を実行
   };  
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
   // ボタンがクリックされたときの処理を定義
   const handleCodeButtonClick = () => {
     // ここにコードボタンがクリックされたときの処理を追加
     console.log('Code button clicked');
   };
-
   const handleImageButtonClick = () => {
     // ここにイメージボタンがクリックされたときの処理を追加
     console.log('Image button clicked');
   };
-
   const handleTableButtonClick = () => {
     // ここにテーブルボタンがクリックされたときの処理を追加
     console.log('Table button clicked');
   };
 
 
-  // レンダリング時にポスト
   useEffect(() => {
-    // const PostData = async () => {
-    //   while (loading) {
-    //     await new Promise(resolve => setTimeout(resolve, 500)); // 0.5秒ごとに確認する例
-    //   }
-    //   if (user) {
-    //     const result = await httpBlogMake(user.uid);
-    //     setBlogId(result); // ステートを更新
-    //   }
-    // };
-    // PostData();
     
     const pathSegments = location.pathname.split('/');
     const lastSegment = pathSegments[pathSegments.length - 1];
-    setBlogId(lastSegment);
+    setBlogId(lastSegment)
 
-    // ここで改めて、getリクエスト送りたい！
-    // GETリクエストの定型文！
-    // const { data: blog, error } = useSWR<BlogData[]>(
-    //   "http://localhost:8080/blog",
-    //   httpFetcher
-    // );
-
-    // ここで、パラメータ or パスの末尾 として、blog_idをバックエンドに送る必要がある
-    // さらにその送ったblog_idを受け取ってパースする処理をバックエンドに記述する必要がある
-
-    // このcomponentの読み込み＝blogの作成、に同期させて作った作ったblogデータを
-    // ここで、取得しているけど、必要ある？
+    // GETリクエストはパスで取得したいデータを指定
     httpFetcher(`http://localhost:8080/blog/${lastSegment}`)
     .then(result => {
-      setData(result);
-      // デバック用
-      console.log(result);
       setTitle(result.title);
       setMarkdownInput(result.content);
-      // マークダウンをHTMLに変換してプレビューに表示
       const htmlText = marked.parse(result.content);
       setHtmlOutput(htmlText);
     });
   
   }, [user, loading]);
-  
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const [isDraft, setIsDraft] = useState(false);
 
   const toggleSwitch = () => {
     setIsDraft(!isDraft);
   };
 
-  const navigate = useNavigate();
-
   // 公開 or 下書き保存
   const handlePutRequest = () => {
-    // if (isDraft) {
-      httpBlogPublish(blog_id, isDraft)
-    // }
+    // POSTリクエストはデータIDで宛先を指定
+    console.log(isDraft)
+    httpBlogPublish(blog_id, isDraft)
     navigate("/draft")
   };
 
@@ -319,7 +262,7 @@ export default function MakeBlog() {
                     // backgroundColor: 'purple'
                   }}
                   value={markdownInput}
-                  onChange={handleInputChange}
+                  onChange={handleTextInputChange}
                 />
               </div>
             </Grid>
