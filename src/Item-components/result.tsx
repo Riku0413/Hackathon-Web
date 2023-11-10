@@ -79,7 +79,6 @@ export default function Result() {
       <Container
         // sx={{backgroundColor: 'green'}}
       >
-        検索結果
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <ButtonGroup variant="outlined" aria-label="outlined button group">

@@ -4,10 +4,8 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useAuth } from '../AuthContext';
-
 import { httpFetcher } from '../http-components/http_fetcher';
-import YouTubeVideo from '../youtube';
+import YouTubeVideo from './youtube';
 
 
 export default function VideoDetail() {

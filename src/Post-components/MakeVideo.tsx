@@ -34,7 +34,7 @@ import { httpVideoPublish } from '../http-components/http_video_publish';
 
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
-import YouTubeVideo from '../youtube';
+import YouTubeVideo from '../Item-components/youtube';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 

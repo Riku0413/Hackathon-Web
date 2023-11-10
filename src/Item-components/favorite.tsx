@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 export default function Favorite() {
   return (
     <Container>
-      いいねしたコンテンツ
+      Contents you like
       <Box
         sx={{
           display: 'flex',
@@ -60,7 +60,7 @@ export default function Favorite() {
         </Paper>
       </Box>
 
-      コメントしたコンテンツ
+      Contents you comment
       <Box
         sx={{
           display: 'flex',

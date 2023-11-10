@@ -64,7 +64,7 @@ const buttonContainerStyle = {
 // メニューボタン一覧
 const settings = [
   { text: 'マイページ', icon: <PersonIcon/>, link: "/mypage" }, 
-  { text: '通知', icon: <NotificationsIcon/>, link: "/notification" }, 
+  { text: 'カリキュラム', icon: <NotificationsIcon/>, link: "/curriculum" }, 
   { text: '下書き一覧', icon: <EditNoteIcon/>, link: "/draft" }, 
   { text: '記事を作成', icon: <ArticleIcon/>, link: "/makeBlog" }, 
   { text: '本を執筆', icon: <MenuBookIcon/>, link: "/makeBook" }, 
@@ -117,8 +117,8 @@ export default function HomeAppBar() {
       case 'マイページ':
         window.location.href = '/mypage'
         break;
-      case '通知':
-        window.location.href = '/notification'
+      case 'カリキュラム':
+        window.location.href = '/curriculum'
         break;
       case '下書き一覧':
         window.location.href = '/draft'

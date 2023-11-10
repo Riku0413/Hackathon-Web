@@ -7,12 +7,11 @@ import NativeSelect from '@mui/material/NativeSelect';
 import { useEffect, useState, ChangeEvent } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
-interface VideoData {
+interface BlogData {
   id: string;
   title: string;
   birth_time: string;
@@ -22,63 +21,61 @@ interface VideoData {
 // ソートオーダーを定義
 type SortOrder = 'asc' | 'desc';
 
-export default function ResultBookList() {
-  const [videos, setVideos] = useState<VideoData[]>();
-  const [searchParams] = useSearchParams();
-  const qParam = searchParams.get('q');
-  const [sortCriteria, setSortCriteria] = useState<keyof VideoData>('title');
+export default function Blog() {
+  const [blogs, setBlogs] = useState<BlogData[]>();
+  const [sortCriteria, setSortCriteria] = useState<keyof BlogData>('title');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
   useEffect(() => {
     const fetchData = async () => {
-      if (qParam) {
+      
         try {
-          const result = await httpFetcher(`http://localhost:8080/videos/search?q=${qParam}`);
-          setVideos(result);
+          const result = await httpFetcher("http://localhost:8080/blogs/all");
+          setBlogs(result);
           console.log(result);
         } catch (error) {
-          console.error("Error fetching videos:", error);
+          console.error("Error fetching blogs:", error);
         }
-      }
-      console.log("these are videos!")
-      console.log(videos)
+      
+      console.log("these are blogs!")
+      console.log(blogs)
     };
     fetchData();
-  }, [qParam]);
+  }, []);
 
-  if (!videos) {
+  if (!blogs) {
     return <p>Loading...</p>;
   }
 
-  // ソートされたブログの配列を作成
-  const sortedVideos = [...videos].sort((a, b) => {
-    // 選択された基準と順序に基づいて比較
-    if (sortOrder === 'asc') {
-      return a[sortCriteria] > b[sortCriteria] ? 1 : -1;
-    } else {
-      return a[sortCriteria] < b[sortCriteria] ? 1 : -1;
-    }
-  });
-
-  const handleSortChange = async (event: ChangeEvent<{ value: unknown }>) => {
-    const selectedValue = event.target.value as keyof VideoData
-    await setSortCriteria(selectedValue);
-  };
-
-  const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      await setSortOrder('desc');
-    } else {
-      await setSortOrder('asc');
-    }
-  };
+    // ソートされたブログの配列を作成
+    const sortedBlogs = [...blogs].sort((a, b) => {
+      // 選択された基準と順序に基づいて比較
+      if (sortOrder === 'asc') {
+        return a[sortCriteria] > b[sortCriteria] ? 1 : -1;
+      } else {
+        return a[sortCriteria] < b[sortCriteria] ? 1 : -1;
+      }
+    });
+  
+    const handleSortChange = async (event: ChangeEvent<{ value: unknown }>) => {
+      const selectedValue = event.target.value as keyof BlogData
+      await setSortCriteria(selectedValue);
+    };
+  
+    const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        await setSortOrder('desc');
+      } else {
+        await setSortOrder('asc');
+      }
+    };
 
   return (
     <Container
     //  sx={{bgcolor: "gray"}}
     >
-
+      All Blogs
 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ minWidth: 120 }}>
             <FormControl>
@@ -114,11 +111,11 @@ export default function ResultBookList() {
       >
 
         <div>
-          {sortedVideos && sortedVideos.length > 0 ? (
+          {sortedBlogs && sortedBlogs.length > 0 ? (
             <div style={{ display: 'flex' }}>
-              {sortedVideos.map((video, index) => (
+              {sortedBlogs.map((blog, index) => (
                 <div key={index}>
-                  <Link to={`/video/detail/${video.id}`}>
+                  <Link to={`/blog/detail/${blog.id}`}>
                     <Paper
                       sx={{
                         display: 'inline-block',
@@ -140,7 +137,7 @@ export default function ResultBookList() {
                           textAlign: 'center',
                         }}
                       >
-                        {video.title ? video.title : "no title"}
+                        {blog.title ? blog.title : "no title"}
                       </div>
 
                       {/* 更新時間を左下に配置 */}
@@ -153,7 +150,7 @@ export default function ResultBookList() {
                           background: 'rgba(255, 255, 255, 0.7)',
                         }}
                       >
-                        {video.update_time.split(" ")[0]}
+                        {blog.update_time.split(" ")[0]}
                       </div>
 
                       {/* ボタンを右下に配置 */}
@@ -174,7 +171,7 @@ export default function ResultBookList() {
               ))}
             </div>
           ) : (
-            <p>No videos available</p>
+            <p>No blogs available</p>
           )}
         </div>
         
