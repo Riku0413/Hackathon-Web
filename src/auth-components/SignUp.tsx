@@ -19,6 +19,7 @@ import { Navigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { httpUserRegister } from '../http-components/http_user_register';
+import { httpFetcher } from '../http-components/http_fetcher';
 
 function Copyright(props: any) {
   return (
@@ -39,51 +40,69 @@ const defaultTheme = createTheme();
 export default function SignUp() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
   const { user, loading } = useAuth();
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
-    try {
-      await createUserWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPassword
-      );
 
-      // createUserWithEmailAndPasswordの処理が完了した後、ユーザーがログイン状態になるのを待つ
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          await httpUserRegister(user.uid);
+    const CheckData = async () => {
+      try {
+        const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/user/check/${registerUsername}`);
+        console.log(result.last_time)
+        if (result.id === '') {
+
+          try {
+            await createUserWithEmailAndPassword(
+              auth,
+              registerEmail,
+              registerPassword
+            );
+      
+            // createUserWithEmailAndPasswordの処理が完了した後、ユーザーがログイン状態になるのを待つ
+            onAuthStateChanged(auth, async (user) => {
+              if (user) {
+                await httpUserRegister(user.uid, registerUsername);
+              }
+            });
+      
+          } catch(error: any) {
+            // エラーコードを取得
+            const errorCode = error.code;
+            // エラーメッセージを設定
+            let errorMessage = "エラーが発生しました。";
+      
+            switch (errorCode) {
+              case "auth/weak-password":
+                errorMessage = "パスワードは6文字以上にしてください。";
+                break;
+              case "auth/invalid-email":
+                errorMessage = "無効なメールアドレス形式です。正しいメールアドレスを入力してください。";
+                break;
+              case "auth/email-already-in-use":
+                errorMessage = "このメールアドレスはすでに使用されています。別のメールアドレスを試してください。";
+                break;
+              case "auth/operation-not-allowed":
+                errorMessage = "指定したメールアドレス・パスワードは現在使用できません。";
+                break;
+              default:
+                break;
+            }
+            // エラーメッセージをユーザーに表示
+            alert(errorMessage);
+
+          };
+
+        } else {
+          console.log('同一ユーザー名が取得されました:', result);
+          alert("このユーザー名はすでに使用されています。");
         }
-      });
-
-    } catch(error: any) {
-      // エラーコードを取得
-      const errorCode = error.code;
-      // エラーメッセージを設定
-      let errorMessage = "エラーが発生しました。";
-
-      switch (errorCode) {
-        case "auth/weak-password":
-          errorMessage = "パスワードは6文字以上にしてください。";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "無効なメールアドレス形式です。正しいメールアドレスを入力してください。";
-          break;
-        case "auth/email-already-in-use":
-          errorMessage = "このメールアドレスはすでに使用されています。別のメールアドレスを試してください。";
-          break;
-        case "auth/operation-not-allowed":
-          errorMessage = "指定したメールアドレス・パスワードは現在使用できません。";
-          break;
-        default:
-          break;
+      } catch (error) {
+        console.error('データの取得に失敗しました:', error);
       }
-
-      // エラーメッセージをユーザーに表示
-      alert(errorMessage);
     };
+    CheckData();
+
   };
 
   return (
@@ -135,25 +154,16 @@ export default function SignUp() {
                       </Typography>
                       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              autoComplete="given-name"
-                              name="firstName"
-                              required
-                              fullWidth
-                              id="firstName"
-                              label="First Name"
-                              autoFocus
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={12}>
                             <TextField
                               required
                               fullWidth
-                              id="lastName"
-                              label="Last Name"
-                              name="lastName"
-                              autoComplete="family-name"
+                              id="UserName"
+                              label="User Name"
+                              name="UserName"
+                              autoComplete="username"
+                              value={registerUsername}
+                              onChange={(e) => setRegisterUsername(e.target.value)}
                             />
                           </Grid>
                           <Grid item xs={12}>

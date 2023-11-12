@@ -30,7 +30,7 @@ export default function Blog() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("http://localhost:8080/blogs/all");
+          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/blogs/all");
           setBlogs(result);
           console.log(result);
         } catch (error) {

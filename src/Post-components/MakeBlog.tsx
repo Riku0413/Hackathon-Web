@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
 import { useAuth } from '../AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { TextField } from '@mui/material';
 
 import { httpFetcher } from '../http-components/http_fetcher';
 import { httpBlogUpdate } from '../http-components/http_blog_update';
@@ -72,7 +73,7 @@ export default function MakeBlog() {
     setBlogId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`http://localhost:8080/blog/${lastSegment}`)
+    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/blog/${lastSegment}`)
     .then(result => {
       setTitle(result.title);
       setMarkdownInput(result.content);
@@ -241,9 +242,9 @@ export default function MakeBlog() {
             >
               <div
                 style={{
-                  margin: '20px',
+                  // margin: '20px',
                   padding: '20px',
-                  border: '1px solid #ccc',
+                  // border: '1px solid #ccc',
                   borderRadius: '4px',
                   minHeight: '200px',
                   display: 'flex',
@@ -251,8 +252,10 @@ export default function MakeBlog() {
                   // backgroundColor: 'pink'
                 }}
               >
-                <TextareaAutosize
+                {/* <TextareaAutosize
                   placeholder="ここにMarkdown記法で書いてみよう"
+                  aria-multiline
+                  minRows={10}
                   style={{
                     border: 'none',
                     width: '100%',
@@ -263,8 +266,18 @@ export default function MakeBlog() {
                   }}
                   value={markdownInput}
                   onChange={handleTextInputChange}
-                />
+                /> */}
+                   <TextField
+          id="outlined-textarea"
+          label="Write in markdown"
+          placeholder="Placeholder"
+          multiline
+          minRows={10}
+          value={markdownInput}
+          onChange={handleTextInputChange}
+        />
               </div>
+
             </Grid>
 
             <Grid
@@ -282,13 +295,24 @@ export default function MakeBlog() {
                   paddingBottom: '0',
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  minHeight: '237px',
+                  minHeight: '258px',
                   display: 'flex',
                   flexDirection: 'column',
                   // backgroundColor: 'purple'
                 }}
               >
-                <div dangerouslySetInnerHTML={{ __html: htmlOutput }} style={{ flex: 1 }} />
+                {/* <div dangerouslySetInnerHTML={{ __html: htmlOutput }} style={{ flex: 1 }} /> */}
+
+            <Typography
+      id="outlined-read-only-input"
+      variant="body1"
+      component="div"
+      dangerouslySetInnerHTML={{ __html: htmlOutput }}
+      style={{
+        overflow: 'auto', // 内容がはみ出た場合にスクロールバーを表示
+
+      }}
+    />
               </div>
             </Grid>
 

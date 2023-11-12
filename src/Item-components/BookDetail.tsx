@@ -34,13 +34,13 @@ export default function BookDetail() {
 
     // GETリクエストはパスで取得したいデータを指定
     console.log("111")
-    httpFetcher(`http://localhost:8080/book/${lastSegment}`)
+    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/book/${lastSegment}`)
     .then(result => {
       setTitle(result.title);
       setIntroduction(result.introduction);
     });
     // book_idをもとにchapterを取得
-    httpFetcher(`http://localhost:8080/chapters/${lastSegment}`)
+    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/chapters/${lastSegment}`)
     .then(result => {
       setChapters(result);
       console.log(result);

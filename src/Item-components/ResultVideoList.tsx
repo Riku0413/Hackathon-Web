@@ -22,7 +22,7 @@ interface VideoData {
 // ソートオーダーを定義
 type SortOrder = 'asc' | 'desc';
 
-export default function ResultBookList() {
+export default function ResultVideoList() {
   const [videos, setVideos] = useState<VideoData[]>();
   const [searchParams] = useSearchParams();
   const qParam = searchParams.get('q');
@@ -33,7 +33,7 @@ export default function ResultBookList() {
     const fetchData = async () => {
       if (qParam) {
         try {
-          const result = await httpFetcher(`http://localhost:8080/videos/search?q=${qParam}`);
+          const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/videos/search?q=${qParam}`);
           setVideos(result);
           console.log(result);
         } catch (error) {

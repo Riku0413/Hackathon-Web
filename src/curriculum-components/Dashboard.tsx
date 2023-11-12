@@ -19,8 +19,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
-import Deposits from './Deposits';
+import WebApp from './WebApp';
 import Orders from './Orders';
+import HomeAppBar from '../Header-components/HomeAppBar';
+import { Link as Router_Link}  from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 
 function Copyright(props: any) {
   return (
@@ -94,11 +98,19 @@ export default function Dashboard() {
     setOpen(!open);
   };
 
+  const location = useLocation();
+
+  // パスの最後の要素を取得
+  const lastPathElement = location.pathname.split('/').pop();
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+
+        <AppBar position="absolute" open={open}
+        sx={{bgcolor: 'white'}}
+        >
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
@@ -106,7 +118,7 @@ export default function Dashboard() {
           >
             <IconButton
               edge="start"
-              color="inherit"
+              color="default"
               aria-label="open drawer"
               onClick={toggleDrawer}
               sx={{
@@ -116,20 +128,21 @@ export default function Dashboard() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Router_Link to="/" style={{ textDecoration: 'none' }}>
+                <Box
+                  sx={{
+                    // display: { xs: 'none', sm: 'block' },
+                    backgroundColor: 'orange',
+                    color: 'white',
+                    px: 2, // 左右のパディングを追加
+                    borderRadius: 1
+                  }}
+                >
+                    <Typography variant="h6" noWrap component="div">
+                      Start
+                    </Typography>
+                </Box>
+              </Router_Link>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -167,8 +180,9 @@ export default function Dashboard() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+
+            <Grid item xs={12} md={4} lg={3}>
+              {lastPathElement === 'webApp' && (
                 <Paper
                   sx={{
                     p: 2,
@@ -177,28 +191,11 @@ export default function Dashboard() {
                     height: 240,
                   }}
                 >
-                  <Chart />
+                  <WebApp />
                 </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
+              )}
+            </Grid>
+
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>

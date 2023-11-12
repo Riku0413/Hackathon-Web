@@ -38,7 +38,7 @@ export default function ChapterDetail() {
     setChapterId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`http://localhost:8080/chapter/${lastSegment}`)
+    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/chapter/${lastSegment}`)
     .then(result => {
       setTitle(result.title);
       setMarkdownInput(result.content);

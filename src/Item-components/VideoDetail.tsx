@@ -24,7 +24,7 @@ export default function VideoDetail() {
     setVideoId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`http://localhost:8080/video/${lastSegment}`)
+    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/video/${lastSegment}`)
     .then(result => {
       console.log(result)
       setTitle(result.title);

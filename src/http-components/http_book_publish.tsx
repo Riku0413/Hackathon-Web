@@ -5,7 +5,7 @@ export const httpBookPublish = async (id: string, publish: boolean) => {
 
   try {
     // console.log(publish);
-    const res = await fetch("http://localhost:8080/book/publish", {
+    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/book/publish", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, publish }),

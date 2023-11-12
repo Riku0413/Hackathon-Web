@@ -2,12 +2,8 @@ import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-
 import { Link, useLocation } from 'react-router-dom';
-import { auth } from '../FirebaseConfig';
-import { useState, useEffect } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
-
+import { useEffect } from 'react';
 import { useAuth } from '../AuthContext'; // AuthContext.js のファイルパスを指定
 
 function a11yProps(index: number) {
@@ -39,47 +35,53 @@ export default function BasicTabs() {
   const user = useAuth();
 
   useEffect(() => {
-    if (user) {
-      // URLに基づいて選択中のタブを切り替える
+    // if (user) {
+    //   // URLに基づいて選択中のタブを切り替える
+    //   switch (location.pathname) {
+    //     case '/':
+    //       setValue(0);
+    //       break;
+    //     case '/favorite':
+    //       setValue(1);
+    //       break;
+    //     case '/blog':
+    //       setValue(2);
+    //       break;
+    //     case '/book':
+    //       setValue(3);
+    //       break;
+    //     case '/video':
+    //       setValue(4);
+    //       break;
+    //     case '/work':
+    //       setValue(5);
+    //       break;
+    //     default:
+    //       setValue(0);
+    //       break;
+    //   }  
+    // } else {
       switch (location.pathname) {
         case '/':
           setValue(0);
           break;
-        case '/favorite':
-          setValue(1);
-          break;
         case '/blog':
-          setValue(2);
+          setValue(1);
           break;
         case '/book':
-          setValue(3);
-          break;
-        case '/video':
-          setValue(4);
-          break;
-        default:
-          setValue(0);
-          break;
-      }  
-    } else {
-      switch (location.pathname) {
-        case '/':
-          setValue(0);
-          break;
-        case '/blog':
-          setValue(1);
-          break;
-        case '/books':
           setValue(2);
           break;
         case '/video':
           setValue(3);
           break;
-        default:
+        case '/work':
           setValue(4);
           break;
+        default:
+          setValue(5);
+          break;
       }  
-    }
+    // }
     // setLoading(false);
   }, [location, user]);
   //  ここら辺のlocatinoやuserなどの依存性の設定によってレンダリングに影響が出る
@@ -107,10 +109,10 @@ export default function BasicTabs() {
           >
 
             <Tab
-              label="trend"
+              label="latest"
               component={Link}
               to="/"
-              {...a11yProps(6)}
+              {...a11yProps(1)}
               sx={{
                 '&.Mui-selected': {
                   color: 'orange', // オレンジ色に変更
@@ -118,12 +120,12 @@ export default function BasicTabs() {
               }}
             />
 
-            {user? (
+            {/* {user? (
               <Tab
                 label="favorite"
                 component={Link}
                 to="/favorite"
-                {...a11yProps(5)}
+                {...a11yProps(6)}
                 sx={{
                   '&.Mui-selected': {
                     color: 'orange', // オレンジ色に変更
@@ -133,7 +135,7 @@ export default function BasicTabs() {
               ) : (
                 null
                 )
-            }
+            } */}
 
             <Tab
               label="blog"
@@ -162,6 +164,17 @@ export default function BasicTabs() {
               component={Link}
               to="/video"
               {...a11yProps(4)}
+              sx={{
+                '&.Mui-selected': {
+                  color: 'orange', // オレンジ色に変更
+                },
+              }}
+            />
+            <Tab
+              label="work"
+              component={Link}
+              to="/work"
+              {...a11yProps(5)}
               sx={{
                 '&.Mui-selected': {
                   color: 'orange', // オレンジ色に変更

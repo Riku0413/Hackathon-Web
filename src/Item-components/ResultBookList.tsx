@@ -33,7 +33,7 @@ export default function ResultBookList() {
     const fetchData = async () => {
       if (qParam) {
         try {
-          const result = await httpFetcher(`http://localhost:8080/books/search?q=${qParam}`);
+          const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/books/search?q=${qParam}`);
           setBlogs(result);
           console.log(result);
         } catch (error) {

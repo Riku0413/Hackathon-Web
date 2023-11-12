@@ -33,7 +33,7 @@ export default function ResultBlogList() {
     const fetchData = async () => {
       if (qParam) {
         try {
-          const result = await httpFetcher(`http://localhost:8080/blogs/search?q=${qParam}`);
+          const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/blogs/search?q=${qParam}`);
           setBlogs(result);
           console.log(result);
         } catch (error) {

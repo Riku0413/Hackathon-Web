@@ -4,7 +4,7 @@
 export const httpBookUpdate = async (id: string, title: string, introduction: string) => {  
 
   try {
-    const res = await fetch("http://localhost:8080/book/update", {
+    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/book/update", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, title, introduction }),

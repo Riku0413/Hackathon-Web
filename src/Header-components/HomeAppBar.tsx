@@ -37,6 +37,7 @@ import { useNavigate } from 'react-router-dom';
 import { httpBlogMake } from '../http-components/http_blog_make';
 import { httpBookMake } from '../http-components/http_book_make';
 import { httpVideoMake } from '../http-components/http_video_make';
+import { httpWorkMake } from '../http-components/http_work_make';
 
 
 // サインアウト用スタイル
@@ -69,8 +70,9 @@ const settings = [
   { text: '記事を作成', icon: <ArticleIcon/>, link: "/makeBlog" }, 
   { text: '本を執筆', icon: <MenuBookIcon/>, link: "/makeBook" }, 
   { text: '動画を投稿', icon: <MovieIcon/>, link: "/makeVideo" }, 
+  { text: '作品を投稿', icon: <MovieIcon/>, link: "/makeWork" }, 
   { text: 'チーム', icon: <GroupIcon/>, link: "/team" }, 
-  { text: '設定', icon: <SettingsIcon/>, link: "/setting" }, 
+  { text: 'IT用語辞典', icon: <SettingsIcon/>, link: "/dictionary" }, 
   { text: 'サインアウト', icon: <LogoutIcon/> }
 ];
 
@@ -148,12 +150,21 @@ export default function HomeAppBar() {
           navigate(`/makeVideo/${result}`);
         }
         break;
+
+      case '作品を投稿':
+
+        // window.location.href = '/makeMovie'
+        if (user) {
+          const result = await httpWorkMake(user.uid);
+          navigate(`/makeWork/${result}`);
+        }
+        break;
         
       case 'チーム':
         window.location.href = '/team'
         break;
-      case '設定':
-        window.location.href = '/setting'
+      case 'IT用語辞典':
+        window.location.href = 'https://wa3.i-3-i.info/index.html'
         break;
       case 'サインアウト':
         handleOpen()
@@ -170,6 +181,7 @@ export default function HomeAppBar() {
    || location.pathname === '/blog' 
    || location.pathname === '/book'
    || location.pathname === '/video' 
+   || location.pathname === '/work' 
    || location.pathname === '/favorite' 
    || location.pathname === '/result' 
    ) {
@@ -217,7 +229,7 @@ export default function HomeAppBar() {
                   }}
                 >
                     <Typography variant="h6" noWrap component="div">
-                      Forest
+                      Start
                     </Typography>
                 </Box>
               </Link>
@@ -307,11 +319,11 @@ export default function HomeAppBar() {
                       >
                         <Box sx={style}>
                           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-                            本当にサインアウトしますか？
+                          Do you really want to sign out?
                           </Typography>
                           <Box sx={buttonContainerStyle}>
-                            <Button variant='outlined' onClick={logout} sx={{ flex: 1, mr: 1 }}>はい</Button>
-                            <Button variant='outlined' onClick={handleClose} sx={{ flex: 1, ml: 1 }}>いいえ</Button>
+                            <Button variant='outlined' onClick={logout} sx={{ flex: 1, mr: 1 }}>yes</Button>
+                            <Button variant='outlined' onClick={handleClose} sx={{ flex: 1, ml: 1 }}>no</Button>
                           </Box>
                         </Box>
                       </Modal>

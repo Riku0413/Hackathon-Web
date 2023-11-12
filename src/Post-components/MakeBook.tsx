@@ -67,7 +67,7 @@ export default function MakeBook() {
   // チャプター追加ボタン
   const handleButtonClick = async () => {
     await httpChapterMake(book_id);
-    await httpFetcher(`http://localhost:8080/chapters/${book_id}`)
+    await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/chapters/${book_id}`)
     .then(result => {
       setChapters(result);
       console.log(result);

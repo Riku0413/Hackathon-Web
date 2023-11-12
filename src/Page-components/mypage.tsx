@@ -15,10 +15,42 @@ import ImageIcon from '@mui/icons-material/Image';
 import TableChartIcon from '@mui/icons-material/TableChart';
 
 import { useAuth } from '../AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { httpFetcher } from '../http-components/http_fetcher';
+import { auth } from '../FirebaseConfig';
+import { Link } from '@mui/material';
+
 
 export default function MyPage() {
   const [markdownInput, setMarkdownInput] = useState<string>('');
   const [htmlOutput, setHtmlOutput] = useState<string>('');
+
+  const [userName, setUserName] = useState("");
+  const [selfIntroduction, setSelfIntroduction] = useState("");
+  const [GithubLink, setGithubLink] = useState("");
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/user/${user.uid}`)
+          .then(result => {
+            setUserName(result.user_name);
+            setSelfIntroduction(result.introduction);
+            setGithubLink(result.git_hub);
+            console.log(result);
+          });
+        }
+      });
+    };
+
+    fetchData(); // データの取得処理を開始
+    
+  }, [user, loading]);
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
@@ -53,7 +85,13 @@ export default function MyPage() {
     console.log('Table button clicked');
   };
 
-  const {user, loading} = useAuth();
+  const handleButtonClick = () => {
+    navigate('/profile/');
+  };
+
+  const handleResetButtonClick = () => {
+    navigate('/resetPassword/');
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -126,42 +164,48 @@ export default function MyPage() {
                 <Grid container spacing={0}
                   // sx={{backgroundColor: 'lightgreen'}}
                 >
-                <Grid item xs={6} md={6}
-                    // sx={{backgroundColor: 'blue'}}
-                  >
-                    <div
-                      style={{
-                        margin: '20px',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        minHeight: '50px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        // backgroundColor: 'pink'
-                      }}
-                    >
-                      <Button>プロフィール編集</Button>
-                    </div>
-                  </Grid>
                   <Grid item xs={6} md={6}
-                    // sx={{backgroundColor: 'blue'}}
-                  >
-                    <div
-                      style={{
-                        margin: '20px',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        minHeight: '50px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        // backgroundColor: 'pink'
-                      }}
+                      // sx={{backgroundColor: 'blue'}}
                     >
-                      <Button>パスワード変更</Button>
-                    </div>
+                      <div
+                        style={{
+                          margin: '20px',
+                          border: '1px solid #ccc',
+                          borderRadius: '4px',
+                          minHeight: '50px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          // backgroundColor: 'pink'
+                        }}
+                      >
+                        <Button style={{ textTransform: 'none' }} onClick={handleButtonClick}>Update profile</Button>
+                      </div>
+                    </Grid>
+                    <Grid item xs={6} md={6}
+                      // sx={{backgroundColor: 'blue'}}
+                    >
+                      <div
+                        style={{
+                          margin: '20px',
+                          border: '1px solid #ccc',
+                          borderRadius: '4px',
+                          minHeight: '50px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          // backgroundColor: 'pink'
+                        }}
+                      >
+                        <Button style={{ textTransform: 'none' }} onClick={handleResetButtonClick}>Reset password</Button>
+                      </div>
+                      {userName}
+                      {selfIntroduction}
+                      <Link href={GithubLink} target="_blank" rel="noopener noreferrer">
+                        GitHub
+                      </Link>
+                    </Grid>
+                    b
                   </Grid>
-                </Grid>
-               
+                  c
                 
               </div>
             </Grid>

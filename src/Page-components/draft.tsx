@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MyBlogList from '../Item-components/myBlogList';
 import MyBookList from '../Item-components/myBookList';
 import MyVideoList from '../Item-components/myVideoList';
+import MyWorkList from '../Item-components/myWorkList';
 
 
 export default function Draft() {
@@ -38,6 +39,8 @@ export default function Draft() {
       navigate("/draft/book")
     } else if (tab === 'video') {
       navigate("/draft/video")
+    } else if (tab === 'work') {
+      navigate("/draft/work")
     }
 
   };
@@ -51,8 +54,7 @@ export default function Draft() {
       <Container
         // sx={{backgroundColor: 'green'}}
       >
-        下書き一覧
-
+        Draft List
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <Button
@@ -73,12 +75,19 @@ export default function Draft() {
             >
               Video
             </Button>
+            <Button
+              variant={activeTab === 'work' ? 'contained' : 'outlined'}
+              onClick={() => handleTabChange('work')}
+            >
+              Work
+            </Button>
           </ButtonGroup>
 
           {/* ボタングループの内容 */}
           {activeTab === 'blog' && <MyBlogList />}
           {activeTab === 'book' && <MyBookList />}
           {activeTab === 'video' && <MyVideoList />}
+          {activeTab === 'work' && <MyWorkList />}
           
         </Box>
 

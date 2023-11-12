@@ -30,7 +30,7 @@ export default function Video() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("http://localhost:8080/videos/all");
+          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/videos/all");
           setVideos(result);
           console.log(result);
         } catch (error) {

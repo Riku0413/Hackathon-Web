@@ -2,7 +2,7 @@
 export const httpBlogDelete = async (id: string) => {  
 
   try {
-    const res = await fetch(`http://localhost:8080/blog/${id}`, {
+    const res = await fetch(`https://hackathon-bafb6ceksa-uc.a.run.app/blog/${id}`, {
       method: "DELETE"
     });
  

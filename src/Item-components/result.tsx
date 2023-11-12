@@ -12,6 +12,7 @@ import { useSearchParams } from 'react-router-dom';
 import ResultBlogList from './ResultBlogList';
 import ResultBookList from './ResultBookList';
 import ResultVideoList from './ResultVideoList';
+import ResultWorkList from './ResultWorkList';
 
 import { Link } from 'react-router-dom';
 
@@ -100,12 +101,19 @@ export default function Result() {
             >
               Video
             </Button>
+            <Button
+              variant={activeTab === 'work' ? 'contained' : 'outlined'}
+              onClick={() => handleTabChange('work')}
+            >
+              Work
+            </Button>
           </ButtonGroup>
 
           {/* ボタングループの内容 */}
           {activeTab === 'blog' && <ResultBlogList />}
           {activeTab === 'book' && <ResultBookList />}
           {activeTab === 'video' && <ResultVideoList />}
+          {activeTab === 'work' && <ResultWorkList />}
           
         </Box>
 

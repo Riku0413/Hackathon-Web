@@ -30,7 +30,7 @@ export default function Book() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("http://localhost:8080/books/all");
+          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/books/all");
           setBooks(result);
           console.log(result);
         } catch (error) {

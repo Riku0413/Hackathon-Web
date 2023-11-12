@@ -65,7 +65,7 @@ function Footer() {
                   // border: '1px solid #ccc',
                 }}
               >
-                Forest
+                Start
               </Grid>
             
               <Grid
@@ -73,12 +73,12 @@ function Footer() {
                 md={12}
                 sx={{
                   color: "white",
-                  fontSize: "15px",
+                  fontSize: "12px",
                   paddingTop: "10px"
                   // border: '1px solid #ccc',
                 }}
               >
-                Nothing is impossible.
+                One big step from here.
               </Grid>
 
             </Grid>
@@ -111,7 +111,7 @@ function Footer() {
               fontSize: "1px",
               // border: '1px solid #ccc',
               width: "300px"
-              }}>@ 2023 Forest inc</div>
+              }}>@ 2023 Start inc</div>
             </Grid>
           </Grid>
           <Grid
