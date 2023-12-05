@@ -7,7 +7,7 @@
 
 1. リポジトリのクローン
    ```
-   git pull "https://github.com/Riku0413/Hackathon-Web.git"
+   git clone "https://github.com/Riku0413/Hackathon-Web.git"
    ```
    
 2. モジュールのインストール
