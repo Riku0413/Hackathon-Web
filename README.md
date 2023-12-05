@@ -1,26 +1,45 @@
 # Hackathon-Web
 
-## ローカルでのアプリの立ち上げ方
+## 概要
+自作したナレッジベース（Webアプリ）のフロントエンド
 
-`npm install react-scripts`
+## 実行方法
 
-モジュールをインストール
+1. リポジトリのクローン
+   ```
+   git pull "url"
+   ```
+   
+2. モジュールのインストール
+   ```
+   npm install react-scripts
+   ```
 
-`npm start`
+3. アプリの起動
+   ```
+   npm start
+   ```
 
-ブラウザでアプリを起動
+## 搭載機能
 
-## デプロイ先
+バックエンドのリポジトリに示す
 
-vercel
+## ファイル構成
 
-## デプロイの方法
+```
+src
+├── auth-components
+├── curriculum-components
+├── Header-components
+├── http-components
+├── Item-components
+├── Page-components
+└── Post-components
+```
 
-- カリキュラムに準ずる
-- pushに合わせて継続的デプロイするには設定が必要かもしれない
+## 技術スタック
 
-## デプロイに合わせた、ソースコードの変更点
-
-### Form.tsx
-
-- fetch関数で指定するURLを、cloudrunにデプロイ済みにバックエンドURLに変更する
+- React（TypeScript）
+- Material UI
+- Firebase（認証）
+- Vercel（過去のデプロイ時に使用）
