@@ -22,9 +22,18 @@ input {
   height: 20px;
 }
 
-.button {
+.post-bottun-area {
+  background-color: red;
+}
+
+.post-button {
   width: 180px;
   height: 35px;
+  margin: 0 calc(50vw - 90px);
+  background-color: gray;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px 10px;
 }
 
 .data {
@@ -32,4 +41,3 @@ input {
   margin: 20px calc(50vw - 200px);
   padding: 50px;
 }
-
