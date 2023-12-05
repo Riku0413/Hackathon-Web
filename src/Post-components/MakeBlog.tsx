@@ -73,7 +73,7 @@ export default function MakeBlog() {
     setBlogId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/blog/${lastSegment}`)
+    httpFetcher(`http://localhost:8080/blog/${lastSegment}`)
     .then(result => {
       setTitle(result.title);
       setMarkdownInput(result.content);
@@ -111,7 +111,7 @@ export default function MakeBlog() {
               }}
             >
                 <Typography variant="h6" noWrap component="div">
-                  Forest
+                   Start
                 </Typography>
             </Box>
           </Link>

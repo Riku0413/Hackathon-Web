@@ -8,6 +8,7 @@ import { useEffect, useState, ChangeEvent } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
+import Footer from '../Header-components/Footer';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -30,7 +31,7 @@ export default function Book() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/books/all");
+          const result = await httpFetcher("http://localhost:8080/books/all");
           setBooks(result);
           console.log(result);
         } catch (error) {
@@ -72,111 +73,120 @@ export default function Book() {
     };
 
   return (
-    <Container
-    //  sx={{bgcolor: "gray"}}
-    >
-      All Books
-　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Sorted by
-              </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
-                onChange={handleSortChange}
-              >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
-          </Box>
-          asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
-        </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
+    <Box>
+      {/* バーの分だけ下げる */}
+      <div style={{ height: "150px", backgroundColor: "#FDF5E6" }}></div>
+    
+      <Container
+      sx={{backgroundColor: "#FDF5E6"}}
       >
+        All Books
+  　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Sorted by
+                </InputLabel>
+                <NativeSelect
+                  defaultValue={30}
+                  inputProps={{
+                    name: 'age',
+                    id: 'uncontrolled-native',
+                  }}
+                  onChange={handleSortChange}
+                >
+                  <option value={'title'}>title</option>
+                  <option value={'birth_time'}>create time</option>
+                  <option value={'update_time'}>update time</option>
+                </NativeSelect>
+              </FormControl>
+            </Box>
+            asc
+            <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+            desc
+          </Box>
 
-        <div>
-          {sortedBooks && sortedBooks.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedBooks.map((book, index) => (
-                <div key={index}>
-                  <Link to={`/book/detail/${book.id}`}>
-                    <Paper
-                      sx={{
-                        display: 'inline-block',
-                        margin: '8px',
-                        minWidth: '200px',
-                        height: '200px',
-                        position: 'relative',
-                      }}
-                      elevation={3}
-                    >
-                      {/* タイトルを中央に配置 */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {book.title ? book.title : "no title"}
-                      </div>
+        <Box
+          sx={{
+            display: 'flex',
+            overflowX: 'auto', // 横方向のスクロールを有効にする
+            whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
+            // bgcolor: "gray"
+          }}
+        >
 
-                      {/* 更新時間を左下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          padding: '8px',
-                          background: 'rgba(255, 255, 255, 0.7)',
+          <div>
+            {sortedBooks && sortedBooks.length > 0 ? (
+              <div style={{ display: 'flex' }}>
+                {sortedBooks.map((book, index) => (
+                  <div key={index}>
+                    <Link to={`/book/detail/${book.id}`}>
+                      <Paper
+                        sx={{
+                          display: 'inline-block',
+                          margin: '8px',
+                          minWidth: '200px',
+                          height: '200px',
+                          position: 'relative',
                         }}
+                        elevation={3}
                       >
-                        {book.update_time.split(" ")[0]}
-                      </div>
+                        {/* タイトルを中央に配置 */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          {book.title ? book.title : "no title"}
+                        </div>
 
-                      {/* ボタンを右下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          padding: '8px',
-                        }}
-                      >
-                      
-                      </div>
-                    </Paper>
-                  </Link>
-                </div>
-                
-              ))}
-            </div>
-          ) : (
-            <p>No books available</p>
-          )}
-        </div>
+                        {/* 更新時間を左下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            padding: '8px',
+                            background: 'rgba(255, 255, 255, 0.7)',
+                          }}
+                        >
+                          {book.update_time.split(" ")[0]}
+                        </div>
+
+                        {/* ボタンを右下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            padding: '8px',
+                          }}
+                        >
+                        
+                        </div>
+                      </Paper>
+                    </Link>
+                  </div>
+                  
+                ))}
+              </div>
+            ) : (
+              <p>No books available</p>
+            )}
+          </div>
+          
+        </Box>
         
-      </Box>
+      </Container>
       
-    </Container>
+      <Footer></Footer>
+
+    </Box>
   );
 }

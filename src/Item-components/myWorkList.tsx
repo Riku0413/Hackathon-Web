@@ -58,7 +58,7 @@ export default function MyWorkList() {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/works/draft/${user.uid}`)
+          httpFetcher(`http://localhost:8080/works/draft/${user.uid}`)
           .then(result => {
             setWorks(result);
             console.log(result);
@@ -102,7 +102,7 @@ export default function MyWorkList() {
   const handleDeleteClick = async (work_id: string) => {
     await httpWorkDelete(work_id)
     if (user) {
-      httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/works/draft/${user.uid}`)
+      httpFetcher(`http://localhost:8080/works/draft/${user.uid}`)
       .then(result => {
         setWorks(result);
         console.log(result);

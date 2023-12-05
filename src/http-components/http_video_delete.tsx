@@ -2,7 +2,7 @@
 export const httpVideoDelete = async (id: string) => {  
 
   try {
-    const res = await fetch(`https://hackathon-bafb6ceksa-uc.a.run.app/video/${id}`, {
+    const res = await fetch(`http://localhost:8080/video/${id}`, {
       method: "DELETE"
     });
  

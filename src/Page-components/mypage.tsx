@@ -37,7 +37,7 @@ export default function MyPage() {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/user/${user.uid}`)
+          httpFetcher(`http://localhost:8080/user/${user.uid}`)
           .then(result => {
             setUserName(result.user_name);
             setSelfIntroduction(result.introduction);
@@ -96,8 +96,9 @@ export default function MyPage() {
   return (
     <Box sx={{ flexGrow: 1 }}>
 
+<div style={{ height: "150px" }}></div>
+
       <Container
-        // sx={{backgroundColor: 'green'}}
       >
         {/* <Box
           sx={{
@@ -139,7 +140,7 @@ export default function MyPage() {
                 style={{
                   margin: '10px',
                   padding: '5px',
-                  border: '1px solid #ccc',
+                  // border: '1px solid #ccc',
                   borderRadius: '4px',
                   minHeight: '50px',
                   minWidth: '200px',
@@ -157,9 +158,9 @@ export default function MyPage() {
                     sx={{backgroundColor: 'orangered', width: '80px', height: '80px', fontSize: '40px'}}
                   />
                   {/* ここにユーザー名 */}
-                  {user && user.email? (
-                    user.email
-                  ) : (null)}
+                  {/* {user && user.email? ( */}
+                    {userName}
+                  
                 </div>
                 <Grid container spacing={0}
                   // sx={{backgroundColor: 'lightgreen'}}
@@ -170,15 +171,16 @@ export default function MyPage() {
                       <div
                         style={{
                           margin: '20px',
-                          border: '1px solid #ccc',
+                          // border: '1px solid #ccc',
                           borderRadius: '4px',
                           minHeight: '50px',
                           display: 'flex',
                           flexDirection: 'column',
                           // backgroundColor: 'pink'
+                          alignItems: 'center',
                         }}
                       >
-                        <Button style={{ textTransform: 'none' }} onClick={handleButtonClick}>Update profile</Button>
+                        <Button variant="contained" color='warning' style={{ textTransform: 'none', width: '200px' }} onClick={handleButtonClick}>Update profile</Button>
                       </div>
                     </Grid>
                     <Grid item xs={6} md={6}
@@ -187,67 +189,43 @@ export default function MyPage() {
                       <div
                         style={{
                           margin: '20px',
-                          border: '1px solid #ccc',
+                          // border: '1px solid #ccc',
                           borderRadius: '4px',
                           minHeight: '50px',
                           display: 'flex',
                           flexDirection: 'column',
                           // backgroundColor: 'pink'
+                          alignItems: 'center',
                         }}
                       >
-                        <Button style={{ textTransform: 'none' }} onClick={handleResetButtonClick}>Reset password</Button>
+                        <Button variant="contained" color='warning' style={{ textTransform: 'none', width: '200px' }} onClick={handleResetButtonClick}>Reset password</Button>
                       </div>
-                      {userName}
-                      {selfIntroduction}
-                      <Link href={GithubLink} target="_blank" rel="noopener noreferrer">
-                        GitHub
-                      </Link>
+
+                      {/* {userName} */}
+                      
                     </Grid>
-                    b
+                    
                   </Grid>
-                  c
-                
-              </div>
-            </Grid>
-          {/* </Grid> */}
-
-          {/* <Grid
-            container
-            spacing={0}
-            sx={{
-              // backgroundColor: 'yellow',
-              flex: 1
-            }}
-          > */}
-            <Grid 
-              item 
-              xs={12} 
-              md={12} 
-              // sx={{ backgroundColor: 'orange' }}
-            >
-              <div
+                  
+                  <div
                 style={{
-                  margin: '20px',
-                  marginBottom: 0, // むりやり
-                  padding: '5px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  minHeight: '20px',
                   display: 'flex',
-                  // flexDirection: 'column',
-                  // backgroundColor: 'purple',
+                  flexDirection: 'column',
+                  alignItems: 'center'
                 }}
               >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Self-Introduction</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              {selfIntroduction}
 
-                <IconButton color='primary' onClick={handleCodeButtonClick}>
-                  <CodeIcon />
-                </IconButton>
-                <IconButton color='primary' onClick={handleImageButtonClick}>
-                  <ImageIcon />
-                </IconButton>
-                <IconButton color='primary' onClick={handleTableButtonClick}>
-                  <TableChartIcon />
-                </IconButton>
+              <strong style={{ fontSize: '1.5rem', marginBottom: '10px', marginTop: '20px' }}>GitHub</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              <Link href={GithubLink} target="_blank" rel="noopener noreferrer" sx={{mb: '20px'}}>
+                        link to my github
+                      </Link>
+              </div>
+              
+
 
               </div>
             </Grid>
@@ -261,38 +239,18 @@ export default function MyPage() {
               flex: 1
             }}
           > */}
-            <Grid 
-              item 
-              xs={12} 
-              md={12} 
-              // sx={{ backgroundColor: 'orange' }}
-            >
-              <div
-                style={{
-                  margin: '20px',
-                  marginBottom: 0, // むりやり
-                  padding: '5px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  minHeight: '20px',
-                  display: 'flex',
-                  // flexDirection: 'column',
-                  // backgroundColor: 'purple',
-                }}
-              >
 
-                <IconButton color='primary' onClick={handleCodeButtonClick}>
-                  <CodeIcon />
-                </IconButton>
-                <IconButton color='primary' onClick={handleImageButtonClick}>
-                  <ImageIcon />
-                </IconButton>
-                <IconButton color='primary' onClick={handleTableButtonClick}>
-                  <TableChartIcon />
-                </IconButton>
+          {/* </Grid> */}
 
-              </div>
-            </Grid>
+          {/* <Grid
+            container
+            spacing={0}
+            sx={{
+              // backgroundColor: 'yellow',
+              flex: 1
+            }}
+          > */}
+ 
           {/* </Grid> */}
 
         {/* </Box> */}

@@ -33,7 +33,7 @@ export default function ResultWorkList() {
     const fetchData = async () => {
       if (qParam) {
         try {
-          const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/works/search?q=${qParam}`);
+          const result = await httpFetcher(`http://localhost:8080/works/search?q=${qParam}`);
           setWorks(result);
           console.log(result);
         } catch (error) {
@@ -100,7 +100,7 @@ export default function ResultWorkList() {
             </FormControl>
           </Box>
           asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+          <Switch color='warning' {...label} defaultChecked onChange={handleSwitchChange} />
           desc
         </Box>
 

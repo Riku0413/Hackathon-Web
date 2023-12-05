@@ -58,7 +58,7 @@ export default function MyVideoList() {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/videos/draft/${user.uid}`)
+          httpFetcher(`http://localhost:8080/videos/draft/${user.uid}`)
           .then(result => {
             setVideos(result);
             console.log(result);
@@ -102,7 +102,7 @@ export default function MyVideoList() {
   const handleDeleteClick = async (video_id: string) => {
     await httpVideoDelete(video_id)
     if (user) {
-      httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/videos/draft/${user.uid}`)
+      httpFetcher(`http://localhost:8080/videos/draft/${user.uid}`)
       .then(result => {
         setVideos(result);
         console.log(result);

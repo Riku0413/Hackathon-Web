@@ -67,7 +67,7 @@ export default function MakeBook() {
   // チャプター追加ボタン
   const handleButtonClick = async () => {
     await httpChapterMake(book_id);
-    await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/chapters/${book_id}`)
+    await httpFetcher(`http://localhost:8080/chapters/${book_id}`)
     .then(result => {
       setChapters(result);
       console.log(result);
@@ -137,7 +137,7 @@ export default function MakeBook() {
               }}
             >
                 <Typography variant="h6" noWrap component="div">
-                  Forest
+                  Start
                 </Typography>
             </Box>
           </Link>
@@ -181,7 +181,18 @@ export default function MakeBook() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              タイトル
+                      
+             <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '5px' }}>Title</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
+
               <div
                 style={{
                   margin: '20px',
@@ -228,7 +239,17 @@ export default function MakeBook() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              本の説明
+                          <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Introduction</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
+
               <div
                 style={{
                   margin: '20px',
@@ -265,13 +286,23 @@ export default function MakeBook() {
             spacing={0}
             // sx={{backgroundColor: 'lightgreen'}}
           >
-            チャプターの一覧
+
             <Grid
               item
               xs={12}
               md={12}
               // sx={{backgroundColor: 'blue'}}
             >
+                                  <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '10px', marginTop: '20px' }}>Chapters</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               {/* <Link to="/makeChapter" style={{textDecoration: 'none'}}>
                 <div
                   style={{
@@ -325,7 +356,21 @@ export default function MakeBook() {
                     ))}
                   </div>
                 ) : (
-                  <p>No chapters available</p>
+
+
+                  <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  // sx={{backgroundColor: 'blue'}}
+                >
+                  <Box sx={{        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+}}><p>No chapters available</p></Box>
+                  
+                  </Grid>
+                  
                 )}
               </div>
 
@@ -334,7 +379,7 @@ export default function MakeBook() {
 
             <Grid item xs={12} md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button variant="contained" color="primary" onClick={handleButtonClick}>
-                チャプターを追加
+               Add chapter 
               </Button>
             </Grid>
 

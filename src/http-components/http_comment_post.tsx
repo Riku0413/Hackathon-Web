@@ -4,7 +4,7 @@
 export const httpCommentPost = async (user_id: string, user_name: string, item_category: string, item_id: string, content: string) => {  
 
   try {
-    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/comment", {
+    const res = await fetch("http://localhost:8080/comment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id, user_name, item_category, item_id, content}),

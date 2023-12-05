@@ -48,7 +48,7 @@ export default function SignUp() {
 
     const CheckData = async () => {
       try {
-        const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/user/check/${registerUsername}`);
+        const result = await httpFetcher(`http://localhost:8080/user/check/${registerUsername}`);
         console.log(result.last_time)
         if (result.id === '') {
 

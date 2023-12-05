@@ -8,6 +8,7 @@ import { useEffect, useState, ChangeEvent } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
+import Footer from '../Header-components/Footer';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -30,7 +31,7 @@ export default function Video() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/videos/all");
+          const result = await httpFetcher("http://localhost:8080/videos/all");
           setVideos(result);
           console.log(result);
         } catch (error) {
@@ -72,9 +73,15 @@ export default function Video() {
     };
 
   return (
+
+    <Box>
+    {/* バーの分だけ下げる */}
+    <div style={{ height: "150px", backgroundColor: "#FDF5E6" }}></div>
+  
     <Container
-    //  sx={{bgcolor: "gray"}}
+    sx={{backgroundColor: "#FDF5E6"}}
     >
+
       All Videos
 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ minWidth: 120 }}>
@@ -178,5 +185,9 @@ export default function Video() {
       </Box>
       
     </Container>
+
+    <Footer></Footer>
+
+    </Box>
   );
 }

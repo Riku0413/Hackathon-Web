@@ -48,14 +48,15 @@ function App() {
           <BrowserRouter>
             <Routes>
               
-              <Route path="/" element={<div><HomeAppBar /><Trend /><Footer /></div>} />
+              <Route path="/" element={<div><HomeAppBar /><Trend /></div>} />
               <Route path="/favorite/" element={<div><HomeAppBar /><Favorite /><Footer /></div>} />
-              <Route path="/blog/" element={<div><HomeAppBar /><Blog /><Footer /></div>} />
-              <Route path="/book/" element={<div><HomeAppBar /><Book /><Footer /></div>} />
-              <Route path="/video/" element={<div><HomeAppBar /><Video /><Footer /></div>} />
-              <Route path="/work/" element={<div><HomeAppBar /><Work /><Footer /></div>} />
+              <Route path="/blog/" element={<div><HomeAppBar /><Blog /></div>} />
+              <Route path="/book/" element={<div><HomeAppBar /><Book /></div>} />
+              <Route path="/video/" element={<div><HomeAppBar /><Video /></div>} />
+              <Route path="/work/" element={<div><HomeAppBar /><Work /></div>} />
 
-              <Route path="/search/" element={<div><HomeAppBar /><SearchKeywords /><Result /><Footer /></div>} />
+              <Route path="/search/" element={<div><HomeAppBar /><SearchKeywords /><Result /></div>} />
+              {/* <Route path="/search/" element={<div><HomeAppBar /><Result /></div>} /> */}
 
               <Route path="/signUp/" element={<div><SignUp /></div>} />
               <Route path="/signIn/" element={<div><SignIn /></div>} />

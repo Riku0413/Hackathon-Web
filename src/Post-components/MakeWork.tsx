@@ -61,7 +61,7 @@ export default function MakeWork() {
     setWorkId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/work/${lastSegment}`)
+    httpFetcher(`http://localhost:8080/work/${lastSegment}`)
     .then(result => {
       console.log(result)
       setTitle(result.title);
@@ -118,7 +118,7 @@ export default function MakeWork() {
               }}
             >
                 <Typography variant="h6" noWrap component="div">
-                  Forest
+                  Start
                 </Typography>
             </Box>
           </Link>
@@ -162,7 +162,16 @@ export default function MakeWork() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              タイトル
+                        <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '5px' }}>Title</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               <div
                 style={{
                   margin: '20px',
@@ -209,7 +218,17 @@ export default function MakeWork() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              作品の説明
+              
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '5px' }}>Introduction</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               <div
                 style={{
                   margin: '20px',
@@ -256,7 +275,16 @@ export default function MakeWork() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              作品のURL
+                        <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '5px' }}>URL</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               <div
                 style={{
                   margin: '20px',
@@ -291,6 +319,7 @@ export default function MakeWork() {
                 variant="contained"
                 color="primary"
                 onClick={handleButtonClick}
+                sx={{marginTop: '20px'}}
               >
                 Test
               </Button>

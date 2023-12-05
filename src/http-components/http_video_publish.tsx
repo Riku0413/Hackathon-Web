@@ -4,7 +4,7 @@
 export const httpVideoPublish = async (id: string, publish: boolean) => {  
 
   try {
-    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/video/publish", {
+    const res = await fetch("http://localhost:8080/video/publish", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, publish }),

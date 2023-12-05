@@ -27,6 +27,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import MovieIcon from '@mui/icons-material/Movie';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AppShortcutIcon from '@mui/icons-material/AppShortcut';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../AuthContext'; // AuthContext.js のファイルパスを指定
 // サインアウト用
@@ -65,14 +68,14 @@ const buttonContainerStyle = {
 // メニューボタン一覧
 const settings = [
   { text: 'マイページ', icon: <PersonIcon/>, link: "/mypage" }, 
-  { text: 'カリキュラム', icon: <NotificationsIcon/>, link: "/curriculum" }, 
+  { text: 'カリキュラム', icon: <AutoStoriesIcon/>, link: "/curriculum" }, 
   { text: '下書き一覧', icon: <EditNoteIcon/>, link: "/draft" }, 
   { text: '記事を作成', icon: <ArticleIcon/>, link: "/makeBlog" }, 
   { text: '本を執筆', icon: <MenuBookIcon/>, link: "/makeBook" }, 
   { text: '動画を投稿', icon: <MovieIcon/>, link: "/makeVideo" }, 
-  { text: '作品を投稿', icon: <MovieIcon/>, link: "/makeWork" }, 
+  { text: '作品を投稿', icon: <AppShortcutIcon/>, link: "/makeWork" }, 
   { text: 'チーム', icon: <GroupIcon/>, link: "/team" }, 
-  { text: 'IT用語辞典', icon: <SettingsIcon/>, link: "/dictionary" }, 
+  { text: 'IT用語辞典', icon: <LibraryBooksIcon/>, link: "/dictionary" }, 
   { text: 'サインアウト', icon: <LogoutIcon/> }
 ];
 
@@ -219,7 +222,7 @@ export default function HomeAppBar() {
             <Toolbar>
 
               <Link to="/" style={{ textDecoration: 'none' }}>
-                <Box
+                <Box 
                   sx={{
                     // display: { xs: 'none', sm: 'block' },
                     backgroundColor: 'orange',
@@ -350,7 +353,7 @@ export default function HomeAppBar() {
       )}      
 
       {/* Appbarの縦幅分下げる！！ */}
-      <div style={{ marginTop: marginTopValue }}></div>
+      {/* <div style={{ height: marginTopValue, backgroundColor: "#FDF5E6" }}></div> */}
       
     </>
     

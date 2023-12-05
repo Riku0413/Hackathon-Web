@@ -46,7 +46,7 @@ export default function UpdateProfile() {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/user/${user.uid}`)
+          httpFetcher(`http://localhost:8080/user/${user.uid}`)
           .then(result => {
             setUserName(result.user_name);
             setSelfIntroduction(result.introduction);

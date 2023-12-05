@@ -12,6 +12,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
+import Footer from '../Header-components/Footer';
 
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
@@ -68,7 +69,7 @@ export default function Trend() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/blogs/all");
+          const result = await httpFetcher("http://localhost:8080/blogs/all");
           setBlogs(result);
           console.log(result);
         } catch (error) {
@@ -76,7 +77,7 @@ export default function Trend() {
         }
 
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/books/all");
+          const result = await httpFetcher("http://localhost:8080/books/all");
           setBooks(result);
           console.log(result);
         } catch (error) {
@@ -84,7 +85,7 @@ export default function Trend() {
         }
 
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/videos/all");
+          const result = await httpFetcher("http://localhost:8080/videos/all");
           setVideos(result);
           console.log(result);
         } catch (error) {
@@ -92,7 +93,7 @@ export default function Trend() {
         }
 
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/works/all");
+          const result = await httpFetcher("http://localhost:8080/works/all");
           setWorks(result);
           console.log(result);
         } catch (error) {
@@ -161,508 +162,518 @@ export default function Trend() {
     // };
 
   return (
-    <Container
-    //  sx={{bgcolor: "gray"}}
+    <Box>
+
+        {/* バーの分だけ下げる */}
+        <div style={{ height: "200px", backgroundColor: "#FDF5E6" }}></div>
+        
+      <Container
+       sx={{backgroundColor: "#FDF5E6"}}
+      >
+        
+                    <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    
+                  }}
+                >
+                  <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Blogs</strong>
+                <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+                </div>
+  {/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Sorted by
+                </InputLabel>
+                <NativeSelect
+                  defaultValue={30}
+                  inputProps={{
+                    name: 'age',
+                    id: 'uncontrolled-native',
+                  }}
+                  onChange={handleSortChange}
+                >
+                  <option value={'title'}>title</option>
+                  <option value={'birth_time'}>create time</option>
+                  <option value={'update_time'}>update time</option>
+                </NativeSelect>
+              </FormControl>
+            </Box>
+            asc
+            <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+            desc
+          </Box> */}
+
+        <Box
+          sx={{
+            display: 'flex',
+            overflowX: 'auto', // 横方向のスクロールを有効にする
+            whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
+            // bgcolor: "gray"
+          }}
+        >
+
+          <div>
+            {sortedBlogs && sortedBlogs.length > 0 ? (
+              <div style={{ display: 'flex' }}>
+                {sortedBlogs.map((blog, index) => (
+                  <div key={index}>
+                    <Link to={`/blog/detail/${blog.id}`}>
+                    <Paper
+    sx={{
+      display: 'inline-block',
+      margin: '8px',
+      minWidth: '200px',
+      height: '200px',
+      position: 'relative',
+      // bgcolor: 'lightgray'
+    }}
+    elevation={3}
+  >
+    {/* ArticleIconを左上に配置 */}
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: '8px',
+        color: 'royalblue',
+      }}
     >
-                   <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center'
-                }}
-              >
-                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Blogs</strong>
-              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+      <ArticleIcon />
+    </div>
+
+    {/* タイトルを中央に配置 */}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        textAlign: 'center',
+      }}
+    >
+      {blog.title ? blog.title : "no title"}
+    </div>
+
+    {/* 更新時間を左下に配置 */}
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        padding: '8px',
+        // background: 'rgba(255, 255, 255, 0.7)',
+        // background: 'lightgray'
+      }}
+    >
+      {blog.update_time.split(" ")[0]}
+    </div>
+
+  </Paper>
+                    </Link>
+                  </div>
+                  
+                ))}
               </div>
-{/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Sorted by
-              </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
-                onChange={handleSortChange}
-              >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
-          </Box>
-          asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
-        </Box> */}
+            ) : (
+              <p>No blogs available</p>
+            )}
+          </div>
+          
+        </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
-      >
 
-        <div>
-          {sortedBlogs && sortedBlogs.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedBlogs.map((blog, index) => (
-                <div key={index}>
-                  <Link to={`/blog/detail/${blog.id}`}>
-                  <Paper
-  sx={{
-    display: 'inline-block',
-    margin: '8px',
-    minWidth: '200px',
-    height: '200px',
-    position: 'relative',
-    // bgcolor: 'lightgray'
-  }}
-  elevation={3}
->
-  {/* ArticleIconを左上に配置 */}
-  <div
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      padding: '8px',
-      color: 'royalblue',
-    }}
-  >
-    <ArticleIcon />
-  </div>
 
-  {/* タイトルを中央に配置 */}
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100%',
-      textAlign: 'center',
-    }}
-  >
-    {blog.title ? blog.title : "no title"}
-  </div>
 
-  {/* 更新時間を左下に配置 */}
-  <div
-    style={{
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      padding: '8px',
-      // background: 'rgba(255, 255, 255, 0.7)',
-      // background: 'lightgray'
-    }}
-  >
-    {blog.update_time.split(" ")[0]}
-  </div>
-
-</Paper>
-                  </Link>
+        <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginTop: '20px'
+                  }}
+                >
+                  <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Books</strong>
+                <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
                 </div>
-                
-              ))}
-            </div>
-          ) : (
-            <p>No blogs available</p>
-          )}
-        </div>
-        
-      </Box>
+  {/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Sorted by
+                </InputLabel>
+                <NativeSelect
+                  defaultValue={30}
+                  inputProps={{
+                    name: 'age',
+                    id: 'uncontrolled-native',
+                  }}
+                  onChange={handleSortChange}
+                >
+                  <option value={'title'}>title</option>
+                  <option value={'birth_time'}>create time</option>
+                  <option value={'update_time'}>update time</option>
+                </NativeSelect>
+              </FormControl>
+            </Box>
+            asc
+            <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+            desc
+          </Box> */}
 
+        <Box
+          sx={{
+            display: 'flex',
+            overflowX: 'auto', // 横方向のスクロールを有効にする
+            whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
+            // bgcolor: "gray"
+          }}
+        >
 
+          <div>
+            {sortedBooks && sortedBooks.length > 0 ? (
+              <div style={{ display: 'flex' }}>
+                {sortedBooks.map((book, index) => (
+                  <div key={index}>
+                    <Link to={`/book/detail/${book.id}`}>
+                      <Paper
+                        sx={{
+                          display: 'inline-block',
+                          margin: '8px',
+                          minWidth: '200px',
+                          height: '200px',
+                          position: 'relative',
+                          // bgcolor: 'lightgray'
+                        }}
+                        elevation={3}
+                      >
+                          {/* ArticleIconを左上に配置 */}
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: '8px',
+        color: 'seagreen',
+      }}
+    >
+      <MenuBookIcon />
+    </div>
+                        {/* タイトルを中央に配置 */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          {book.title ? book.title : "no title"}
+                        </div>
 
+                        {/* 更新時間を左下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            padding: '8px',
+                            // background: 'rgba(255, 255, 255, 0.7)',
+                            // background: 'lightgray'
+                          }}
+                        >
+                          {book.update_time.split(" ")[0]}
+                        </div>
 
-      <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginTop: '20px'
-                }}
-              >
-                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Books</strong>
-              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+                        {/* ボタンを右下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            padding: '8px',
+                          }}
+                        >
+                        
+                        </div>
+                      </Paper>
+                    </Link>
+                  </div>
+                  
+                ))}
               </div>
-{/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Sorted by
-              </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
-                onChange={handleSortChange}
-              >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
-          </Box>
-          asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
-        </Box> */}
+            ) : (
+              <p>No books available</p>
+            )}
+          </div>
+          
+        </Box>
+        
+        <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginTop: '20px'
+                  }}
+                >
+                  <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Videos</strong>
+                <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+                </div>
+  {/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Sorted by
+                </InputLabel>
+                <NativeSelect
+                  defaultValue={30}
+                  inputProps={{
+                    name: 'age',
+                    id: 'uncontrolled-native',
+                  }}
+                  onChange={handleSortChange}
+                >
+                  <option value={'title'}>title</option>
+                  <option value={'birth_time'}>create time</option>
+                  <option value={'update_time'}>update time</option>
+                </NativeSelect>
+              </FormControl>
+            </Box>
+            asc
+            <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+            desc
+          </Box> */}
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
-      >
+        <Box
+          sx={{
+            display: 'flex',
+            overflowX: 'auto', // 横方向のスクロールを有効にする
+            whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
+            // bgcolor: "gray"
+          }}
+        >
 
-        <div>
-          {sortedBooks && sortedBooks.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedBooks.map((book, index) => (
-                <div key={index}>
-                  <Link to={`/book/detail/${book.id}`}>
-                    <Paper
-                      sx={{
-                        display: 'inline-block',
-                        margin: '8px',
-                        minWidth: '200px',
-                        height: '200px',
-                        position: 'relative',
-                        // bgcolor: 'lightgray'
-                      }}
-                      elevation={3}
-                    >
-                        {/* ArticleIconを左上に配置 */}
+          <div>
+            {sortedVideos && sortedVideos.length > 0 ? (
+              <div style={{ display: 'flex' }}>
+                {sortedVideos.map((video, index) => (
+                  <div key={index}>
+                    <Link to={`/video/detail/${video.id}`}>
+                      <Paper
+                        sx={{
+                          display: 'inline-block',
+                          margin: '8px',
+                          minWidth: '200px',
+                          height: '200px',
+                          position: 'relative',
+                          // bgcolor: 'lightgray'
+                        }}
+                        elevation={3}
+                      >
+
   <div
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      padding: '8px',
-      color: 'seagreen',
-    }}
-  >
-    <MenuBookIcon />
-  </div>
-                      {/* タイトルを中央に配置 */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {book.title ? book.title : "no title"}
-                      </div>
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: '8px',
+        color: 'crimson',
+      }}
+    >
+      <OndemandVideoIcon />
+    </div>
 
-                      {/* 更新時間を左下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          padding: '8px',
-                          // background: 'rgba(255, 255, 255, 0.7)',
-                          // background: 'lightgray'
-                        }}
-                      >
-                        {book.update_time.split(" ")[0]}
-                      </div>
+                        {/* タイトルを中央に配置 */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          {video.title ? video.title : "no title"}
+                        </div>
 
-                      {/* ボタンを右下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          padding: '8px',
-                        }}
-                      >
-                      
-                      </div>
-                    </Paper>
-                  </Link>
-                </div>
-                
-              ))}
-            </div>
-          ) : (
-            <p>No books available</p>
-          )}
-        </div>
-        
-      </Box>
-      
-      <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginTop: '20px'
-                }}
-              >
-                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Videos</strong>
-              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+                        {/* 更新時間を左下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            padding: '8px',
+                            // background: 'rgba(255, 255, 255, 0.7)',
+                            // background: 'lightgray'
+                          }}
+                        >
+                          {video.update_time.split(" ")[0]}
+                        </div>
+
+                        {/* ボタンを右下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            padding: '8px',
+                          }}
+                        >
+                        
+                        </div>
+                      </Paper>
+                    </Link>
+                  </div>
+                  
+                ))}
               </div>
-{/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Sorted by
-              </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
-                onChange={handleSortChange}
-              >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
-          </Box>
-          asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
-        </Box> */}
+            ) : (
+              <p>No videos available</p>
+            )}
+          </div>
+          
+        </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
-      >
-
-        <div>
-          {sortedVideos && sortedVideos.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedVideos.map((video, index) => (
-                <div key={index}>
-                  <Link to={`/video/detail/${video.id}`}>
-                    <Paper
-                      sx={{
-                        display: 'inline-block',
-                        margin: '8px',
-                        minWidth: '200px',
-                        height: '200px',
-                        position: 'relative',
-                        // bgcolor: 'lightgray'
-                      }}
-                      elevation={3}
-                    >
-
-<div
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      padding: '8px',
-      color: 'crimson',
-    }}
-  >
-    <OndemandVideoIcon />
-  </div>
-
-                      {/* タイトルを中央に配置 */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {video.title ? video.title : "no title"}
-                      </div>
-
-                      {/* 更新時間を左下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          padding: '8px',
-                          // background: 'rgba(255, 255, 255, 0.7)',
-                          // background: 'lightgray'
-                        }}
-                      >
-                        {video.update_time.split(" ")[0]}
-                      </div>
-
-                      {/* ボタンを右下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          padding: '8px',
-                        }}
-                      >
-                      
-                      </div>
-                    </Paper>
-                  </Link>
+        <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginTop: '20px'
+                  }}
+                >
+                  <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Works</strong>
+                <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
                 </div>
-                
-              ))}
-            </div>
-          ) : (
-            <p>No videos available</p>
-          )}
-        </div>
-        
-      </Box>
+  {/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Sorted by
+                </InputLabel>
+                <NativeSelect
+                  defaultValue={30}
+                  inputProps={{
+                    name: 'age',
+                    id: 'uncontrolled-native',
+                  }}
+                  onChange={handleSortChange}
+                >
+                  <option value={'title'}>title</option>
+                  <option value={'birth_time'}>create time</option>
+                  <option value={'update_time'}>update time</option>
+                </NativeSelect>
+              </FormControl>
+            </Box>
+            asc
+            <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+            desc
+          </Box> */}
 
-      <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginTop: '20px'
-                }}
-              >
-                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Latest Works</strong>
-              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+        <Box
+          sx={{
+            display: 'flex',
+            overflowX: 'auto', // 横方向のスクロールを有効にする
+            whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
+            // bgcolor: "gray"
+          }}
+        >
+
+          <div>
+            {sortedWorks && sortedWorks.length > 0 ? (
+              <div style={{ display: 'flex' }}>
+                {sortedWorks.map((work, index) => (
+                  <div key={index}>
+                    <Link to={`/work/detail/${work.id}`}>
+                      <Paper
+                        sx={{
+                          display: 'inline-block',
+                          margin: '8px',
+                          minWidth: '200px',
+                          height: '200px',
+                          position: 'relative',
+                          // bgcolor: 'lightgray'
+                        }}
+                        elevation={3}
+                      >
+
+  <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: '8px',
+        color: 'gold',
+      }}
+    >
+      <AppShortcutIcon />
+    </div>
+
+                        {/* タイトルを中央に配置 */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          {work.title ? work.title : "no title"}
+                        </div>
+
+                        {/* 更新時間を左下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            padding: '8px',
+                            // background: 'rgba(255, 255, 255, 0.7)',
+                            // background: 'lightgray'
+                          }}
+                        >
+                          {work.update_time.split(" ")[0]}
+                        </div>
+
+                        {/* ボタンを右下に配置 */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            padding: '8px',
+                          }}
+                        >
+                        
+                        </div>
+                      </Paper>
+                    </Link>
+                  </div>
+                  
+                ))}
               </div>
-{/* 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Sorted by
-              </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
-                onChange={handleSortChange}
-              >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
-          </Box>
-          asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
-        </Box> */}
+            ) : (
+              <p>No works available</p>
+            )}
+          </div>
+          
+        </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
-      >
+      </Container>
 
-        <div>
-          {sortedWorks && sortedWorks.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedWorks.map((work, index) => (
-                <div key={index}>
-                  <Link to={`/work/detail/${work.id}`}>
-                    <Paper
-                      sx={{
-                        display: 'inline-block',
-                        margin: '8px',
-                        minWidth: '200px',
-                        height: '200px',
-                        position: 'relative',
-                        // bgcolor: 'lightgray'
-                      }}
-                      elevation={3}
-                    >
+      <Footer></Footer>
 
-<div
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      padding: '8px',
-      color: 'gold',
-    }}
-  >
-    <AppShortcutIcon />
-  </div>
-
-                      {/* タイトルを中央に配置 */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {work.title ? work.title : "no title"}
-                      </div>
-
-                      {/* 更新時間を左下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          padding: '8px',
-                          // background: 'rgba(255, 255, 255, 0.7)',
-                          // background: 'lightgray'
-                        }}
-                      >
-                        {work.update_time.split(" ")[0]}
-                      </div>
-
-                      {/* ボタンを右下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          padding: '8px',
-                        }}
-                      >
-                      
-                      </div>
-                    </Paper>
-                  </Link>
-                </div>
-                
-              ))}
-            </div>
-          ) : (
-            <p>No works available</p>
-          )}
-        </div>
-        
-      </Box>
-
-
-    </Container>
+    </Box>
   );
 }

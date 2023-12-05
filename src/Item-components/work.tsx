@@ -8,6 +8,7 @@ import { useEffect, useState, ChangeEvent } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
+import Footer from '../Header-components/Footer';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -30,7 +31,7 @@ export default function Work() {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/works/all");
+          const result = await httpFetcher("http://localhost:8080/works/all");
           setWorks(result);
           console.log(result);
         } catch (error) {
@@ -72,8 +73,13 @@ export default function Work() {
     };
 
   return (
+
+    <Box>
+    {/* バーの分だけ下げる */}
+    <div style={{ height: "150px", backgroundColor: "#FDF5E6" }}></div>
+
     <Container
-    //  sx={{bgcolor: "gray"}}
+     sx={{bgcolor: "#FDF5E6"}}
     >
       All Works
 　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -178,5 +184,9 @@ export default function Work() {
       </Box>
       
     </Container>
+
+    <Footer></Footer>
+
+    </Box>
   );
 }

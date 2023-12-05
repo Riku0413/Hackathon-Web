@@ -7,6 +7,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ChangeEvent, useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import SearchKeywords from './SearchKeywords';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 20,
@@ -117,6 +119,8 @@ export default function SearchBar() {
 
         {/* サーチフィールド直下の余白 */}
         <div style={{ marginTop: '25px' }}></div>
+
+        {/* <SearchKeywords/> */}
         
     </Box>
   );

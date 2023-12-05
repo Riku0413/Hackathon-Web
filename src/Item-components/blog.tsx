@@ -9,7 +9,29 @@ import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
 
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
+import Footer from '../Header-components/Footer';
+import ButtonGroup from '@mui/material/ButtonGroup';
+
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
+import { useMediaQuery } from '@mui/material';
+
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+// const buttons = [
+//   <Button key="title">Title</Button>,
+//   <Button key="created">Created</Button>,
+//   <Button key="updated">Updated</Button>,
+// ];
 
 interface BlogData {
   id: string;
@@ -26,11 +48,13 @@ export default function Blog() {
   const [sortCriteria, setSortCriteria] = useState<keyof BlogData>('title');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
+  const isSmallScreen = useMediaQuery('(max-width:700px)');
+
   useEffect(() => {
     const fetchData = async () => {
       
         try {
-          const result = await httpFetcher("https://hackathon-bafb6ceksa-uc.a.run.app/blogs/all");
+          const result = await httpFetcher("http://localhost:8080/blogs/all");
           setBlogs(result);
           console.log(result);
         } catch (error) {
@@ -57,126 +81,135 @@ export default function Blog() {
       }
     });
   
-    const handleSortChange = async (event: ChangeEvent<{ value: unknown }>) => {
-      const selectedValue = event.target.value as keyof BlogData
-      await setSortCriteria(selectedValue);
-    };
-  
-    const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
-      const isChecked = event.target.checked;
-      if (isChecked) {
-        await setSortOrder('desc');
-      } else {
+    const handleSortChange = async (selectedValue: string) => {
+      await setSortCriteria(selectedValue as keyof BlogData);
+      if (selectedValue == 'title') {
         await setSortOrder('asc');
+      } else {
+        await setSortOrder('desc');
       }
     };
+  
+    // const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
+    //   const isChecked = event.target.checked;
+    //   if (isChecked) {
+    //     await setSortOrder('desc');
+    //   } else {
+    //     await setSortOrder('asc');
+    //   }
+    // };
+    
+    const buttons = [
+      { label: "title", value: "title" },
+      { label: "create", value: "birth_time" },
+      { label: "update", value: "update_time" }
+    ].map((buttonData, index) => (
+      <Button key={index} onClick={() => handleSortChange(buttonData.value)}>{buttonData.label}</Button>
+    ));
+    
 
   return (
-    <Container
-    //  sx={{bgcolor: "gray"}}
-    >
-      All Blogs
-　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
+    <Box sx={{bgcolor: "#FDF5E6"}}>
+      
+      {/* バーの分だけ下げる */}
+      <div style={{ height: "150px", backgroundColor: "#FDF5E6" }}></div>
+  
+      <Container>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '20px' }}>
+            <Typography variant="h5" component="div" fontWeight={'bold'} marginLeft={'10px'}>All Blogs</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '0px' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  '& > *': {
+                    m: 1,
+                  },
+                  fontSize: '0.8rem', // 任意のフォントサイズに設定
+                  fontWeight: 'bold',
+                }}
+              >
+                Sort Option
+                <ButtonGroup variant="contained" color="warning" aria-label="medium secondary button group">
+                  {buttons}
+                </ButtonGroup>
+              </Box>
+
+              {/* <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{fontWeight: 'bold'}}>
                 Sorted by
               </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
-                onChange={handleSortChange}
-              >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
+              <div style={{width: '8px'}}></div>
+              <FormControl>
+                <NativeSelect
+                  defaultValue={30}
+                  inputProps={{
+                    name: 'age',
+                    id: 'uncontrolled-native',
+                  }}
+                  onChange={handleSortChange}
+                >
+                  <option value={'title'}>title</option>
+                  <option value={'birth_time'}>create time</option>
+                  <option value={'update_time'}>update time</option>
+                </NativeSelect>
+              </FormControl>
+              <div style={{width: '12px'}}></div>
+              <Typography fontWeight={'bold'}>ASC</Typography>
+                <Switch {...label} defaultChecked onChange={handleSwitchChange} />
+              <Typography fontWeight={'bold'}>DESC</Typography> */}
+            </Box>
           </Box>
-          asc
-          <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
-        </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
-      >
-
-        <div>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '20px',
+            justifyContent: isSmallScreen ? 'center' : 'flex-start',
+          }}
+        >
           {sortedBlogs && sortedBlogs.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedBlogs.map((blog, index) => (
-                <div key={index}>
-                  <Link to={`/blog/detail/${blog.id}`}>
-                    <Paper
-                      sx={{
-                        display: 'inline-block',
-                        margin: '8px',
-                        minWidth: '200px',
-                        height: '200px',
-                        position: 'relative',
-                      }}
-                      elevation={3}
-                    >
-                      {/* タイトルを中央に配置 */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {blog.title ? blog.title : "no title"}
-                      </div>
-
-                      {/* 更新時間を左下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          padding: '8px',
-                          background: 'rgba(255, 255, 255, 0.7)',
-                        }}
-                      >
-                        {blog.update_time.split(" ")[0]}
-                      </div>
-
-                      {/* ボタンを右下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          padding: '8px',
-                        }}
-                      >
-                      
-                      </div>
-                    </Paper>
-                  </Link>
-                </div>
-                
-              ))}
-            </div>
+            sortedBlogs.map((blog, index) => (
+              <Link
+                key={index}
+                to={`/blog/detail/${blog.id}`}
+                style={{ 
+                  textDecoration: 'none', 
+                  flex: '0 0 calc(50% - 10px)', 
+                  minWidth: isSmallScreen ? '100%' : '275px', // Optional: Set a minimum width for larger screens
+                }}
+              >
+                <Card sx={{ minWidth: 275 }}>
+                  <CardContent>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                      this is blog
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      {blog.title ? blog.title : "no title"}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      user name
+                    </Typography>
+                    <Typography variant="body2">
+                      {blog.update_time.split(" ")[0]}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))
           ) : (
             <p>No blogs available</p>
           )}
-        </div>
+        </Box>
+
+        <div style={{height: "50px"}}></div>
         
-      </Box>
-      
-    </Container>
+      </Container>
+
+      <Footer></Footer>
+
+    </Box>
   );
 }

@@ -25,7 +25,7 @@ export default function WorkDetail() {
     setWorkId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/work/${lastSegment}`)
+    httpFetcher(`http://localhost:8080/work/${lastSegment}`)
     .then(result => {
       console.log(result)
       setTitle(result.title);

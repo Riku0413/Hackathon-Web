@@ -94,7 +94,7 @@ export default function BlogDetail() {
     
     const fetchData = async () => {
       // console.log(lastSegment)
-      await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/blog/${lastSegment}`)
+      await httpFetcher(`http://localhost:8080/blog/${lastSegment}`)
       .then(result => {
         setTitle(result.title);
         setContent(result.content);
@@ -115,7 +115,7 @@ export default function BlogDetail() {
 
       // コメント一覧をとってくる
       try {
-        const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/comments/blog/${lastSegment}`);
+        const result = await httpFetcher(`http://localhost:8080/comments/blog/${lastSegment}`);
         setComments(result);
         console.log(result);
       } catch (error) {
@@ -132,13 +132,13 @@ export default function BlogDetail() {
 
   const handlePost = async () => {
     if (user && blog_id) {
-      const res = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/user/${user.uid}`)
+      const res = await httpFetcher(`http://localhost:8080/user/${user.uid}`)
       await setUserName(res.user_name);
       await httpCommentPost(user.uid, res.user_name, 'blog', blog_id, myComment)
       await setMyComment('');
       // コメント一覧をとってくる
       try {
-        const result = await httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/comments/blog/${blog_id}`);
+        const result = await httpFetcher(`http://localhost:8080/comments/blog/${blog_id}`);
         await setComments(result);
         console.log(result);
       } catch (error) {

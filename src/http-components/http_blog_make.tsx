@@ -4,7 +4,7 @@
 export const httpBlogMake = async (user_id: string) => {  
 
   try {
-    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/blog", {
+    const res = await fetch("http://localhost:8080/blog", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id }),

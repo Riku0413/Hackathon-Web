@@ -4,7 +4,7 @@
 export const httpChapterMake = async (book_id: string) => {  
 
   try {
-    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/chapter", {
+    const res = await fetch("http://localhost:8080/chapter", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ book_id }),

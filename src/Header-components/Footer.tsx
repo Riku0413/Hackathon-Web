@@ -3,12 +3,27 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { Link } from "@mui/material";
+import { useState, useEffect } from "react";
 
 
 function Footer() {
+  // const [renderComplete, setRenderComplete] = useState(false);
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setRenderComplete(true);
+  //   }, 500);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  // if (!renderComplete) {
+  //   return null;
+  // }
 
   return (
     <div>
+      <div style={{ marginTop: '50px' }}></div>
 
       {/* <Container> */}
         <Grid
@@ -17,8 +32,8 @@ function Footer() {
           item 
           xs={12} 
           md={12}
-          sx={{bgcolor: "#282c34", minHeight: '400px', bottom: 0}}
-          mt={"50px"}
+          sx={{bgcolor: "#282c34", minHeight: '600px', bottom: 0}}
+          // mt={"50px"}
         >
           {/* <div
             style={{

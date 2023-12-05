@@ -80,7 +80,7 @@ export default function MakeVideo() {
     setVideoId(lastSegment)
 
     // GETリクエストはパスで取得したいデータを指定
-    httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/video/${lastSegment}`)
+    httpFetcher(`http://localhost:8080/video/${lastSegment}`)
     .then(result => {
       console.log(result)
       setTitle(result.title);
@@ -132,7 +132,7 @@ export default function MakeVideo() {
               }}
             >
                 <Typography variant="h6" noWrap component="div">
-                  Forest
+                Start
                 </Typography>
             </Box>
           </Link>
@@ -176,7 +176,16 @@ export default function MakeVideo() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              タイトル
+                    <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Title</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               <div
                 style={{
                   margin: '20px',
@@ -223,7 +232,16 @@ export default function MakeVideo() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              動画の説明
+                    <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Introduction</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               <div
                 style={{
                   margin: '20px',
@@ -270,7 +288,16 @@ export default function MakeVideo() {
               md={12}
               // sx={{ backgroundColor: 'orange' }}
             >
-              動画のURL
+                    <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}
+              >
+                <strong style={{ fontSize: '1.5rem', marginBottom: '10px' }}>URL</strong>
+              <hr style={{ width: '93%', borderTop: '1px solid #ccc' }} />
+              </div>
               <div
                 style={{
                   margin: '20px',
@@ -302,7 +329,12 @@ export default function MakeVideo() {
               </div>
 
               <div>
-                {url? <YouTubeVideo videoUrl={url} /> : null}
+                
+              <Box sx={{        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+}}>{url? <YouTubeVideo videoUrl={url} /> : null}</Box>
+                {/* {url? <YouTubeVideo videoUrl={url} /> : null} */}
                 {/* <YouTubeVideo videoUrl="https://youtu.be/KqIT4a7X6KE?si=uiRLcAYp5xy5FHCa" /> */}
               </div>
 

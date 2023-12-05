@@ -15,6 +15,7 @@ import ResultVideoList from './ResultVideoList';
 import ResultWorkList from './ResultWorkList';
 
 import { Link } from 'react-router-dom';
+import Footer from '../Header-components/Footer';
 
 
 interface BlogData {
@@ -73,16 +74,17 @@ export default function Result() {
   return (
     <div>
     <Box sx={{ flexGrow: 1 }}>
+    <div style={{ height: "200px", backgroundColor: "#FDF5E6" }}></div>
 
       {/* 本当はこんな感じで、コンポーネントごとに上の余白を定義するべきなんだけど後回し！ */}
       {/* <div style={{ marginTop: "100px" }}></div> */}
 
       <Container
-        // sx={{backgroundColor: 'green'}}
+        sx={{backgroundColor: "#FDF5E6"}}
       >
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group">
+          <ButtonGroup variant="outlined" color="warning" aria-label="outlined button group">
             <Button
               variant={activeTab === 'blog' ? 'contained' : 'outlined'}
               onClick={() => handleTabChange('blog')}
@@ -118,6 +120,8 @@ export default function Result() {
         </Box>
 
       </Container>
+
+      <Footer></Footer>
 
     </Box>
 

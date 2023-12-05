@@ -57,7 +57,7 @@ export default function MyBookList() {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/books/draft/${user.uid}`)
+          httpFetcher(`http://localhost:8080/books/draft/${user.uid}`)
           .then(result => {
             setBooks(result);
             console.log(result);
@@ -102,7 +102,7 @@ export default function MyBookList() {
     // ↓このリクエストでchapterもまとめて消す！
     await httpBookDelete(book_id)
     if (user) {
-      httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/books/draft/${user.uid}`)
+      httpFetcher(`http://localhost:8080/books/draft/${user.uid}`)
       .then(result => {
         setBooks(result);
         console.log(result);

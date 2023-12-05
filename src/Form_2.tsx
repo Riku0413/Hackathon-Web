@@ -11,7 +11,7 @@ interface UserData {
 
 // GETリクエストを送ってJSONを返す
 const fetchUsers = async () => {
-  const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/users", {
+  const res = await fetch("http://localhost:8080/users", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const fetchUsers = async () => {
 
 // name、ageとともにPOSTリクエストを送る
 const postUser = async (userData: { name: string; age: number }) => {
-  const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/user", {
+  const res = await fetch("http://localhost:8080/user", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

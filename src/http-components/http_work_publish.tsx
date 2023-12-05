@@ -4,7 +4,7 @@
 export const httpWorkPublish = async (id: string, publish: boolean) => {  
 
   try {
-    const res = await fetch("https://hackathon-bafb6ceksa-uc.a.run.app/work/publish", {
+    const res = await fetch("http://localhost:8080/work/publish", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, publish }),

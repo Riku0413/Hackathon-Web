@@ -55,7 +55,7 @@ export default function MyBlogList() {
     const fetchData = async () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/blogs/draft/${user.uid}`)
+          httpFetcher(`http://localhost:8080/blogs/draft/${user.uid}`)
           .then(result => {
             setBlogs(result);
             console.log(result);
@@ -74,7 +74,7 @@ export default function MyBlogList() {
   const handleDeleteClick = async (blog_id: string) => {
     await httpBlogDelete(blog_id)
     if (user) {
-      httpFetcher(`https://hackathon-bafb6ceksa-uc.a.run.app/blogs/draft/${user.uid}`)
+      httpFetcher(`http://localhost:8080/blogs/draft/${user.uid}`)
       .then(result => {
         setBlogs(result);
         console.log(result);
