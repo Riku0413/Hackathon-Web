@@ -34,8 +34,8 @@ const SearchKeywords: React.FC = () => {
   };
 
   return (
-    <Box>
-      <div style={{ marginTop: '200px' }}></div>
+    <Box sx={{backgroundColor: "#FDF5E6"}}>
+      <div style={{ height: "200px", backgroundColor: "#FDF5E6" }}></div>
       <Container>
         <Grid container spacing={2} justifyContent="center">
           {keywords.map((keyword, index) => (
