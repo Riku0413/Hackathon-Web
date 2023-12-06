@@ -380,7 +380,7 @@ export default function BlogDetail() {
         
               </div>
                 <Stack spacing={2} direction="row" justifyContent="flex-end" style={{ marginRight: '30px' }} >
-                  <Button variant="contained" onClick={handlePost}>POST</Button>
+                  <Button variant="contained" color='warning' onClick={handlePost}>POST</Button>
                 </Stack>
             </Grid>
 

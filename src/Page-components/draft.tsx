@@ -49,14 +49,14 @@ export default function Draft() {
     <Box sx={{ flexGrow: 1 }}>
 
       {/* 本当はこんな感じで、コンポーネントごとに上の余白を定義するべきなんだけど後回し！ */}
-      {/* <div style={{ marginTop: "100px" }}></div> */}
+      <div style={{ height: "100px", backgroundColor: "#FDF5E6" }}></div>
 
       <Container
-        // sx={{backgroundColor: 'green'}}
+        sx={{backgroundColor: "#FDF5E6" }}
       >
         Draft List
         <Box sx={{ width: '100%', typography: 'body1' }}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group">
+          <ButtonGroup variant="outlined" color= 'warning' aria-label="outlined button group">
             <Button
               variant={activeTab === 'blog' ? 'contained' : 'outlined'}
               onClick={() => handleTabChange('blog')}

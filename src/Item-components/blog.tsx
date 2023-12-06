@@ -24,6 +24,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { useMediaQuery } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -44,30 +45,30 @@ interface BlogData {
 type SortOrder = 'asc' | 'desc';
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState<BlogData[]>();
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [sortCriteria, setSortCriteria] = useState<keyof BlogData>('title');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [fetchSuccess, setFetchSuccess] = useState(false); // フェッチ成功のフラグ
 
   const isSmallScreen = useMediaQuery('(max-width:700px)');
 
   useEffect(() => {
     const fetchData = async () => {
-      
-        try {
-          const result = await httpFetcher("http://localhost:8080/blogs/all");
-          setBlogs(result);
-          console.log(result);
-        } catch (error) {
-          console.error("Error fetching blogs:", error);
-        }
-      
-      console.log("these are blogs!")
-      console.log(blogs)
+      try {
+        const result = await httpFetcher("http://localhost:8080/blogs/all");
+        setBlogs(result);
+        setFetchSuccess(true); // データ取得成功時にフラグをtrueに設定
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+        setFetchSuccess(false); // データ取得失敗時にフラグをfalseに設定
+      }
     };
+
     fetchData();
   }, []);
 
-  if (!blogs) {
+  if (!fetchSuccess) {
     return <p>Loading...</p>;
   }
 
@@ -167,7 +168,7 @@ export default function Blog() {
             display: 'flex',
             flexWrap: 'wrap',
             gap: '20px',
-            justifyContent: isSmallScreen ? 'center' : 'flex-start',
+            justifyContent: isSmallScreen || !blogs.length? 'center' : 'flex-start',
           }}
         >
           {sortedBlogs && sortedBlogs.length > 0 ? (
@@ -200,7 +201,20 @@ export default function Blog() {
               </Link>
             ))
           ) : (
-            <p>No blogs available</p>
+            <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              height: '100px'
+            }}
+          >
+            <Typography variant="h4" component="p">
+              No blogs available
+            </Typography>
+          </Box>
           )}
         </Box>
 
