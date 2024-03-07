@@ -23,7 +23,7 @@ function Footer() {
 
   return (
     <div>
-      <div style={{ marginTop: '50px' }}></div>
+      {/* <div style={{ marginTop: '50px' }}></div> */}
 
       {/* <Container> */}
         <Grid

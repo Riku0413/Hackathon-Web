@@ -344,6 +344,8 @@ export default function MakeVideo() {
         </Box>
       </Container>
 
+      <div style={{height: "50px"}}></div>
+
     </Box>
   );
 }

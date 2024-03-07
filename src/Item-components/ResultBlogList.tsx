@@ -1,16 +1,13 @@
-import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { useMediaQuery } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import Switch from '@mui/material/Switch';
-
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 interface BlogData {
   id: string;
@@ -23,11 +20,14 @@ interface BlogData {
 type SortOrder = 'asc' | 'desc';
 
 export default function ResultBlogList() {
-  const [blogs, setBlogs] = useState<BlogData[]>();
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [searchParams] = useSearchParams();
   const qParam = searchParams.get('q');
-  const [sortCriteria, setSortCriteria] = useState<keyof BlogData>('title');
+  const [sortCriteria, setSortCriteria] = useState<keyof BlogData>('birth_time');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [fetchSuccess, setFetchSuccess] = useState(true); // フェッチ成功のフラグ
+  const [isLoading, setIsLoading] = useState(true);
+  const isSmallScreen = useMediaQuery('(max-width:700px)');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,20 +35,20 @@ export default function ResultBlogList() {
         try {
           const result = await httpFetcher(`http://localhost:8080/blogs/search?q=${qParam}`);
           setBlogs(result);
+          setIsLoading(false); // データ取得完了後にローディング状態を終了
+          setFetchSuccess(true); // データ取得成功時にフラグをtrueに設定
           console.log(result);
         } catch (error) {
           console.error("Error fetching blogs:", error);
+          setFetchSuccess(false); // データ取得失敗時にフラグをfalseに設定
         }
       }
       console.log("these are blogs!")
       console.log(blogs)
+      setIsLoading(false); // エラー発生時もローディング状態を終了
     };
     fetchData();
   }, [qParam]);
-
-  if (!blogs) {
-    return <p>Loading...</p>;
-  }
 
   // ソートされたブログの配列を作成
   const sortedBlogs = [...blogs].sort((a, b) => {
@@ -60,126 +60,84 @@ export default function ResultBlogList() {
     }
   });
 
-  const handleSortChange = async (event: ChangeEvent<{ value: unknown }>) => {
-    const selectedValue = event.target.value as keyof BlogData
-    await setSortCriteria(selectedValue);
-  };
-
-  const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      await setSortOrder('desc');
-    } else {
-      await setSortOrder('asc');
-    }
-  };
-
   return (
-    <Container
-    //  sx={{bgcolor: "gray"}}
-    >
+    <Box sx={{bgcolor: "#FDF5E6"}}>
+      
+      {/* バーの分だけ下げる */}
+      <div style={{ height: "50px", backgroundColor: "#FDF5E6" }}></div>
+      
+      <Container>
 
-　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Sorted by
-              </InputLabel>
-              <NativeSelect
-                defaultValue={30}
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '20px',
+            justifyContent: isSmallScreen || !blogs.length? 'center' : 'flex-start',
+          }}
+        >
+          {sortedBlogs && sortedBlogs.length > 0 ? (
+            sortedBlogs.map((blog, index) => (
+              <Link
+                key={index}
+                to={`/blog/detail/${blog.id}`}
+                style={{ 
+                  textDecoration: 'none', 
+                  flex: '0 0 calc(50% - 10px)', 
+                  minWidth: isSmallScreen ? '100%' : '275px', // Optional: Set a minimum width for larger screens
                 }}
-                onChange={handleSortChange}
               >
-                <option value={'title'}>title</option>
-                <option value={'birth_time'}>create time</option>
-                <option value={'update_time'}>update time</option>
-              </NativeSelect>
-            </FormControl>
+                <Card sx={{ minWidth: 275 }}>
+                  <CardContent>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                      this is blog
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      {blog.title ? blog.title : "no title"}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      user name
+                    </Typography>
+                    <Typography variant="body2">
+                      {blog.update_time.split(" ")[0]}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))
+          ) : (
+            <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              height: '600px'
+            }}
+          >
+            <Typography variant="h4" component="p">
+              {isLoading ? (
+                // <p>Loading...</p>
+                null
+                  ) : (
+                    <div>
+                      {!fetchSuccess? (
+                        <div>Failed to get blogs</div>
+                      ) : (
+                        <div>No blogs available</div>
+                      )}
+                    </div>
+              )}
+            </Typography>
           </Box>
-          asc
-          <Switch color='warning' {...label} defaultChecked onChange={handleSwitchChange} />
-          desc
+          )}
         </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto', // 横方向のスクロールを有効にする
-          whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-          // bgcolor: "gray"
-        }}
-      >
-
-        <div>
-          {sortedBlogs && sortedBlogs.length > 0 ? (
-            <div style={{ display: 'flex' }}>
-              {sortedBlogs.map((blog, index) => (
-                <div key={index}>
-                  <Link to={`/blog/detail/${blog.id}`}>
-                    <Paper
-                      sx={{
-                        display: 'inline-block',
-                        margin: '8px',
-                        minWidth: '200px',
-                        height: '200px',
-                        position: 'relative',
-                      }}
-                      elevation={3}
-                    >
-                      {/* タイトルを中央に配置 */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {blog.title ? blog.title : "no title"}
-                      </div>
-
-                      {/* 更新時間を左下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          padding: '8px',
-                          background: 'rgba(255, 255, 255, 0.7)',
-                        }}
-                      >
-                        {blog.update_time.split(" ")[0]}
-                      </div>
-
-                      {/* ボタンを右下に配置 */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          padding: '8px',
-                        }}
-                      >
-                      
-                      </div>
-                    </Paper>
-                  </Link>
-                </div>
-                
-              ))}
-            </div>
-          ) : (
-            <p>No blogs available</p>
-          )}
-        </div>
+        <div style={{height: "50px"}}></div>
         
-      </Box>
-      
-    </Container>
+      </Container>
+
+    </Box>
   );
 }

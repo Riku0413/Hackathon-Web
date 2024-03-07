@@ -60,6 +60,8 @@ const SearchKeywords: React.FC = () => {
           ))}
         </Grid>
       </Container>
+      
+      <div style={{height: "50px"}}></div>
 
       <Footer></Footer>
     </Box>

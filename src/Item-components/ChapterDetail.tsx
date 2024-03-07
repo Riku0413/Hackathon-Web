@@ -138,6 +138,8 @@ export default function ChapterDetail() {
 
       </Container>
 
+      <div style={{height: "50px"}}></div>
+
     </Box>
   );
 }

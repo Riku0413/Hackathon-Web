@@ -378,7 +378,7 @@ export default function MakeBook() {
             </Grid>
 
             <Grid item xs={12} md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" color="primary" onClick={handleButtonClick}>
+              <Button variant="contained" color="warning" onClick={handleButtonClick}>
                Add chapter 
               </Button>
             </Grid>
@@ -387,6 +387,8 @@ export default function MakeBook() {
 
         </Box>
       </Container>
+
+      <div style={{height: "50px"}}></div>
 
     </Box>
   );

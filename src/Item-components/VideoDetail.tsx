@@ -146,6 +146,8 @@ export default function VideoDetail() {
         </Box>
       </Container>
 
+      <div style={{height: "50px"}}></div>
+
     </Box>
   );
 }

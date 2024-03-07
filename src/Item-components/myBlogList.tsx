@@ -204,6 +204,8 @@ export default function MyBlogList() {
         </div>
         
       </Box>
+
+      <div style={{height: "50px"}}></div>
       
     </Container>
   );

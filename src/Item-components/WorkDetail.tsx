@@ -143,7 +143,7 @@ export default function WorkDetail() {
 
             　<Button
                 variant="contained"
-                color="primary"
+                color="warning"
                 onClick={handleButtonClick}
               >
                 Go to the Work
@@ -154,6 +154,8 @@ export default function WorkDetail() {
 
         </Box>
       </Container>
+
+      <div style={{height: "50px"}}></div>
 
     </Box>
   );

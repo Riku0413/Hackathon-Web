@@ -670,6 +670,8 @@ export default function Trend() {
           
         </Box>
 
+        <div style={{height: "50px"}}></div>
+
       </Container>
 
       <Footer></Footer>

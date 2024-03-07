@@ -96,7 +96,7 @@ export default function MyPage() {
   return (
     <Box sx={{ flexGrow: 1 }}>
 
-<div style={{ height: "150px" }}></div>
+　　　 <div style={{ height: "120px" }}></div>
 
       <Container
       >
@@ -255,6 +255,8 @@ export default function MyPage() {
 
         {/* </Box> */}
       </Container>
+
+      <div style={{ height: "100px" }}></div>
 
     </Box>
   );

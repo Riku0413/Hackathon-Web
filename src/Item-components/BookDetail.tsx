@@ -188,6 +188,8 @@ export default function BookDetail() {
         </Box>
       </Container>
 
+      <div style={{height: "50px"}}></div>
+
     </Box>
   );
 }

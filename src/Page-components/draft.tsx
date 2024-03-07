@@ -9,8 +9,24 @@ import MyBookList from '../Item-components/myBookList';
 import MyVideoList from '../Item-components/myVideoList';
 import MyWorkList from '../Item-components/myWorkList';
 
+import * as React from 'react';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
 
 export default function Draft() {
+
+  const [alignment, setAlignment] = React.useState('web');
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string,
+  ) => {
+    setAlignment(newAlignment);
+  };
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -82,6 +98,19 @@ export default function Draft() {
               Work
             </Button>
           </ButtonGroup>
+
+          <ToggleButtonGroup
+      color="warning"
+      value={alignment}
+      exclusive
+      onChange={handleChange}
+      aria-label="Platform"
+    >
+      <ToggleButton value="web">Web</ToggleButton>
+      <ToggleButton value="android">Android</ToggleButton>
+      <ToggleButton value="ios">iOS</ToggleButton>
+    </ToggleButtonGroup>
+  
 
           {/* ボタングループの内容 */}
           {activeTab === 'blog' && <MyBlogList />}

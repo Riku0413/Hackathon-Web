@@ -1,16 +1,15 @@
-import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
-import Switch from '@mui/material/Switch';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Footer from '../Header-components/Footer';
-
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
+import ButtonGroup from '@mui/material/ButtonGroup';
+import { useMediaQuery } from '@mui/material';
 
 interface BookData {
   id: string;
@@ -23,168 +22,161 @@ interface BookData {
 type SortOrder = 'asc' | 'desc';
 
 export default function Book() {
-  const [books, setBooks] = useState<BookData[]>();
+  const [books, setBooks] = useState<BookData[]>([]);
   const [sortCriteria, setSortCriteria] = useState<keyof BookData>('title');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [fetchSuccess, setFetchSuccess] = useState(true); // フェッチ成功のフラグ
+  const [isLoading, setIsLoading] = useState(true);
+  const isSmallScreen = useMediaQuery('(max-width:700px)');
 
   useEffect(() => {
     const fetchData = async () => {
-      
-        try {
-          const result = await httpFetcher("http://localhost:8080/books/all");
-          setBooks(result);
-          console.log(result);
-        } catch (error) {
-          console.error("Error fetching books:", error);
-        }
-      
-      console.log("these are books!")
-      console.log(books)
+      try {
+        const result = await httpFetcher("http://localhost:8080/books/all");
+        setBooks(result);
+        setIsLoading(false); // データ取得完了後にローディング状態を終了
+        setFetchSuccess(true); // データ取得成功時にフラグをtrueに設定
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        setIsLoading(false); // エラー発生時もローディング状態を終了
+        setFetchSuccess(false); // データ取得失敗時にフラグをfalseに設定
+      }
     };
+
     fetchData();
   }, []);
 
-  if (!books) {
-    return <p>Loading...</p>;
-  }
-
-    // ソートされたブログの配列を作成
-    const sortedBooks = [...books].sort((a, b) => {
-      // 選択された基準と順序に基づいて比較
-      if (sortOrder === 'asc') {
-        return a[sortCriteria] > b[sortCriteria] ? 1 : -1;
-      } else {
-        return a[sortCriteria] < b[sortCriteria] ? 1 : -1;
-      }
-    });
+  // ソートされたブログの配列を作成
+  const sortedBooks = [...books].sort((a, b) => {
+    // 選択された基準と順序に基づいて比較
+    if (sortOrder === 'asc') {
+      return a[sortCriteria] > b[sortCriteria] ? 1 : -1;
+    } else {
+      return a[sortCriteria] < b[sortCriteria] ? 1 : -1;
+    }
+  });
   
-    const handleSortChange = async (event: ChangeEvent<{ value: unknown }>) => {
-      const selectedValue = event.target.value as keyof BookData
-      await setSortCriteria(selectedValue);
-    };
+  const handleSortChange = async (selectedValue: string) => {
+    await setSortCriteria(selectedValue as keyof BookData);
+    if (selectedValue == 'title') {
+      await setSortOrder('asc');
+    } else {
+      await setSortOrder('desc');
+    }
+  };
   
-    const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
-      const isChecked = event.target.checked;
-      if (isChecked) {
-        await setSortOrder('desc');
-      } else {
-        await setSortOrder('asc');
-      }
-    };
+  const buttons = [
+    { label: "title", value: "title" },
+    { label: "create", value: "birth_time" },
+    { label: "update", value: "update_time" }
+  ].map((buttonData, index) => (
+    <Button key={index} onClick={() => handleSortChange(buttonData.value)}>{buttonData.label}</Button>
+  ));
+    
 
   return (
-
-    <Box>
+    <Box sx={{bgcolor: "#FDF5E6"}}>
+      
       {/* バーの分だけ下げる */}
       <div style={{ height: "150px", backgroundColor: "#FDF5E6" }}></div>
-    
-      <Container
-      sx={{backgroundColor: "#FDF5E6"}}
-      >
-        All Books
-  　　　　　<Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl>
-                <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                  Sorted by
-                </InputLabel>
-                <NativeSelect
-                  defaultValue={30}
-                  inputProps={{
-                    name: 'age',
-                    id: 'uncontrolled-native',
-                  }}
-                  onChange={handleSortChange}
-                >
-                  <option value={'title'}>title</option>
-                  <option value={'birth_time'}>create time</option>
-                  <option value={'update_time'}>update time</option>
-                </NativeSelect>
-              </FormControl>
+      
+      <Container>
+        
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '20px' }}>
+            <Typography variant="h5" component="div" fontWeight={'bold'} marginLeft={'10px'}>All Books</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '0px' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  '& > *': {
+                    m: 1,
+                  },
+                  fontSize: '0.8rem', // 任意のフォントサイズに設定
+                  fontWeight: 'bold',
+                }}
+              >
+                Sort Option
+                <ButtonGroup variant="contained" color="warning" aria-label="medium secondary button group">
+                  {buttons}
+                </ButtonGroup>
+              </Box>
+
             </Box>
-            asc
-            <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-            desc
           </Box>
 
         <Box
           sx={{
             display: 'flex',
-            overflowX: 'auto', // 横方向のスクロールを有効にする
-            whiteSpace: 'nowrap', // 横並びの要素が折り返さないようにする
-            // bgcolor: "gray"
+            flexWrap: 'wrap',
+            gap: '20px',
+            justifyContent: isSmallScreen || !books.length? 'center' : 'flex-start',
           }}
         >
-
-          <div>
-            {sortedBooks && sortedBooks.length > 0 ? (
-              <div style={{ display: 'flex' }}>
-                {sortedBooks.map((book, index) => (
-                  <div key={index}>
-                    <Link to={`/book/detail/${book.id}`}>
-                      <Paper
-                        sx={{
-                          display: 'inline-block',
-                          margin: '8px',
-                          minWidth: '200px',
-                          height: '200px',
-                          position: 'relative',
-                        }}
-                        elevation={3}
-                      >
-                        {/* タイトルを中央に配置 */}
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100%',
-                            textAlign: 'center',
-                          }}
-                        >
-                          {book.title ? book.title : "no title"}
-                        </div>
-
-                        {/* 更新時間を左下に配置 */}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            padding: '8px',
-                            background: 'rgba(255, 255, 255, 0.7)',
-                          }}
-                        >
-                          {book.update_time.split(" ")[0]}
-                        </div>
-
-                        {/* ボタンを右下に配置 */}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            right: 0,
-                            padding: '8px',
-                          }}
-                        >
-                        
-                        </div>
-                      </Paper>
-                    </Link>
-                  </div>
-                  
-                ))}
-              </div>
-            ) : (
-              <p>No books available</p>
-            )}
-          </div>
-          
+          {sortedBooks && sortedBooks.length > 0 ? (
+            sortedBooks.map((book, index) => (
+              <Link
+                key={index}
+                to={`/book/detail/${book.id}`}
+                style={{ 
+                  textDecoration: 'none', 
+                  flex: '0 0 calc(50% - 10px)', 
+                  minWidth: isSmallScreen ? '100%' : '275px', // Optional: Set a minimum width for larger screens
+                }}
+              >
+                <Card sx={{ minWidth: 275 }}>
+                  <CardContent>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                      this is book
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      {book.title ? book.title : "no title"}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      user name
+                    </Typography>
+                    <Typography variant="body2">
+                      {book.update_time.split(" ")[0]}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))
+          ) : (
+            <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              height: '600px'
+            }}
+          >
+            <Typography variant="h4" component="p">
+              {isLoading ? (
+                // <p>Loading...</p>
+                null
+                  ) : (
+                    <div>
+                      {!fetchSuccess? (
+                        <div>Failed to get books</div>
+                      ) : (
+                        <div>No books available</div>
+                      )}
+                    </div>
+              )}
+            </Typography>
+          </Box>
+          )}
         </Box>
+
+        <div style={{height: "50px"}}></div>
         
       </Container>
-      
+
       <Footer></Footer>
 
     </Box>

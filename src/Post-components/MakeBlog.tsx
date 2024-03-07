@@ -252,30 +252,15 @@ export default function MakeBlog() {
                   // backgroundColor: 'pink'
                 }}
               >
-                {/* <TextareaAutosize
-                  placeholder="ここにMarkdown記法で書いてみよう"
-                  aria-multiline
+                <TextField
+                  id="outlined-textarea"
+                  label="Write in markdown"
+                  placeholder="Placeholder"
+                  multiline
                   minRows={10}
-                  style={{
-                    border: 'none',
-                    width: '100%',
-                    resize: 'none',
-                    outline: 'none',
-                    flex: 1,
-                    // backgroundColor: 'purple'
-                  }}
                   value={markdownInput}
                   onChange={handleTextInputChange}
-                /> */}
-                   <TextField
-          id="outlined-textarea"
-          label="Write in markdown"
-          placeholder="Placeholder"
-          multiline
-          minRows={10}
-          value={markdownInput}
-          onChange={handleTextInputChange}
-        />
+                />
               </div>
 
             </Grid>
@@ -303,23 +288,27 @@ export default function MakeBlog() {
               >
                 {/* <div dangerouslySetInnerHTML={{ __html: htmlOutput }} style={{ flex: 1 }} /> */}
 
-            <Typography
-      id="outlined-read-only-input"
-      variant="body1"
-      component="div"
-      dangerouslySetInnerHTML={{ __html: htmlOutput }}
-      style={{
-        overflow: 'auto', // 内容がはみ出た場合にスクロールバーを表示
+                <Typography
+                  id="outlined-read-only-input"
+                  variant="body1"
+                  component="div"
+                  dangerouslySetInnerHTML={{ __html: htmlOutput }}
+                  style={{
+                    overflow: 'auto', // 内容がはみ出た場合にスクロールバーを表示
 
-      }}
-    />
+                  }}
+                />
+
               </div>
             </Grid>
 
           </Grid>
 
         </Box>
+
       </Container>
+
+      <div style={{height: "50px"}}></div>
 
     </Box>
   );

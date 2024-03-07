@@ -1,38 +1,15 @@
-import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { httpFetcher } from '../http-components/http_fetcher';
 import { Link } from 'react-router-dom';
-import Switch from '@mui/material/Switch';
-
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-
 import Footer from '../Header-components/Footer';
 import ButtonGroup from '@mui/material/ButtonGroup';
-
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid';
-
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
-// const buttons = [
-//   <Button key="title">Title</Button>,
-//   <Button key="created">Created</Button>,
-//   <Button key="updated">Updated</Button>,
-// ];
 
 interface BlogData {
   id: string;
@@ -48,8 +25,8 @@ export default function Blog() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [sortCriteria, setSortCriteria] = useState<keyof BlogData>('title');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [fetchSuccess, setFetchSuccess] = useState(false); // フェッチ成功のフラグ
-
+  const [fetchSuccess, setFetchSuccess] = useState(true); // フェッチ成功のフラグ
+  const [isLoading, setIsLoading] = useState(true);
   const isSmallScreen = useMediaQuery('(max-width:700px)');
 
   useEffect(() => {
@@ -57,10 +34,12 @@ export default function Blog() {
       try {
         const result = await httpFetcher("http://localhost:8080/blogs/all");
         setBlogs(result);
+        setIsLoading(false); // データ取得完了後にローディング状態を終了
         setFetchSuccess(true); // データ取得成功時にフラグをtrueに設定
         console.log(result);
       } catch (error) {
         console.error("Error fetching blogs:", error);
+        setIsLoading(false); // エラー発生時もローディング状態を終了
         setFetchSuccess(false); // データ取得失敗時にフラグをfalseに設定
       }
     };
@@ -68,45 +47,32 @@ export default function Blog() {
     fetchData();
   }, []);
 
-  if (!fetchSuccess) {
-    return <p>Loading...</p>;
-  }
-
-    // ソートされたブログの配列を作成
-    const sortedBlogs = [...blogs].sort((a, b) => {
-      // 選択された基準と順序に基づいて比較
-      if (sortOrder === 'asc') {
-        return a[sortCriteria] > b[sortCriteria] ? 1 : -1;
-      } else {
-        return a[sortCriteria] < b[sortCriteria] ? 1 : -1;
-      }
-    });
+  // ソートされたブログの配列を作成
+  const sortedBlogs = [...blogs].sort((a, b) => {
+    // 選択された基準と順序に基づいて比較
+    if (sortOrder === 'asc') {
+      return a[sortCriteria] > b[sortCriteria] ? 1 : -1;
+    } else {
+      return a[sortCriteria] < b[sortCriteria] ? 1 : -1;
+    }
+  });
   
-    const handleSortChange = async (selectedValue: string) => {
-      await setSortCriteria(selectedValue as keyof BlogData);
-      if (selectedValue == 'title') {
-        await setSortOrder('asc');
-      } else {
-        await setSortOrder('desc');
-      }
-    };
+  const handleSortChange = async (selectedValue: string) => {
+    await setSortCriteria(selectedValue as keyof BlogData);
+    if (selectedValue == 'title') {
+      await setSortOrder('asc');
+    } else {
+      await setSortOrder('desc');
+    }
+  };
   
-    // const handleSwitchChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
-    //   const isChecked = event.target.checked;
-    //   if (isChecked) {
-    //     await setSortOrder('desc');
-    //   } else {
-    //     await setSortOrder('asc');
-    //   }
-    // };
-    
-    const buttons = [
-      { label: "title", value: "title" },
-      { label: "create", value: "birth_time" },
-      { label: "update", value: "update_time" }
-    ].map((buttonData, index) => (
-      <Button key={index} onClick={() => handleSortChange(buttonData.value)}>{buttonData.label}</Button>
-    ));
+  const buttons = [
+    { label: "title", value: "title" },
+    { label: "create", value: "birth_time" },
+    { label: "update", value: "update_time" }
+  ].map((buttonData, index) => (
+    <Button key={index} onClick={() => handleSortChange(buttonData.value)}>{buttonData.label}</Button>
+  ));
     
 
   return (
@@ -114,9 +80,9 @@ export default function Blog() {
       
       {/* バーの分だけ下げる */}
       <div style={{ height: "150px", backgroundColor: "#FDF5E6" }}></div>
-  
+      
       <Container>
-
+        
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '20px' }}>
             <Typography variant="h5" component="div" fontWeight={'bold'} marginLeft={'10px'}>All Blogs</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '0px' }}>
@@ -138,28 +104,6 @@ export default function Blog() {
                 </ButtonGroup>
               </Box>
 
-              {/* <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{fontWeight: 'bold'}}>
-                Sorted by
-              </InputLabel>
-              <div style={{width: '8px'}}></div>
-              <FormControl>
-                <NativeSelect
-                  defaultValue={30}
-                  inputProps={{
-                    name: 'age',
-                    id: 'uncontrolled-native',
-                  }}
-                  onChange={handleSortChange}
-                >
-                  <option value={'title'}>title</option>
-                  <option value={'birth_time'}>create time</option>
-                  <option value={'update_time'}>update time</option>
-                </NativeSelect>
-              </FormControl>
-              <div style={{width: '12px'}}></div>
-              <Typography fontWeight={'bold'}>ASC</Typography>
-                <Switch {...label} defaultChecked onChange={handleSwitchChange} />
-              <Typography fontWeight={'bold'}>DESC</Typography> */}
             </Box>
           </Box>
 
@@ -208,11 +152,22 @@ export default function Blog() {
               alignItems: 'center',
               textAlign: 'center',
               fontWeight: 'bold',
-              height: '100px'
+              height: '600px'
             }}
           >
             <Typography variant="h4" component="p">
-              No blogs available
+              {isLoading ? (
+                // <p>Loading...</p>
+                null
+                  ) : (
+                    <div>
+                      {!fetchSuccess? (
+                        <div>Failed to get blogs</div>
+                      ) : (
+                        <div>No blogs available</div>
+                      )}
+                    </div>
+              )}
             </Typography>
           </Box>
           )}
